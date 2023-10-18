@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                      http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.20.xsd">
+
+  <changeSet id="1" author="michal">
+    <createTable tableName="users">
+      <column name="id" type="bigint" autoIncrement="true">
+        <constraints primaryKey="true"/>
+      </column>
+      <column name="name" type="varchar(25)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="surname" type="varchar(35)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="email" type="varchar(255)">
+        <constraints nullable="false" unique="true"/>
+      </column>
+      <column name="password" type="varchar(60)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="role" type="varchar(10)" defaultValue="USER">
+        <constraints nullable="false"/>
+      </column>
+      <column name="is_active" type="boolean" defaultValue="FALSE">
+        <constraints nullable="false"/>
+      </column>
+      <column name="activation_code" type="varchar(45)">
+        <constraints nullable="true" unique="true"/>
+      </column>
+    </createTable>
+  </changeSet>
+  
+  <changeSet id="2" author="michal">
+    <createTable tableName="halls">
+      <column name="id" type="bigint" autoIncrement="true">
+        <constraints primaryKey="true"/>
+      </column>
+      <column name="symbol" type="varchar(15)">
+        <constraints nullable="false" unique="true"/>
+      </column>
+      <column name="r" type="int">
+        <constraints nullable="false"/>
+      </column>
+      <column name="c" type="int">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+  
+  <changeSet id="3" author="michal">
+    <createTable tableName="movies">
+      <column name="id" type="bigint" autoIncrement="true">
+        <constraints primaryKey="true"/>
+      </column>
+      <column name="title" type="varchar(45)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="description" type="varchar(255)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+  </changeSet>
+  
+  <changeSet id="4" author="michal">
+    <createTable tableName="spectacles">
+      <column name="id" type="bigint" autoIncrement="true">
+        <constraints primaryKey="true"/>
+      </column>
+      <column name="date" type="datetime">
+        <constraints nullable="false"/>
+      </column>
+      <column name="price" type="double">
+        <constraints nullable="false"/>
+      </column>
+      <column name="movies_id"  type="bigint">
+        <constraints nullable="false" foreignKeyName="movies.id"/>
+      </column>
+      <column name="halls_id"  type="bigint">
+        <constraints nullable="false" foreignKeyName="halls.id"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+  <changeSet id="5" author="michal">
+    <createTable tableName="reservations">
+      <column name="spectacles_id" type="bigint">
+        <constraints primaryKey="true" foreignKeyName="spectacles.id"/>
+      </column>
+      <column name="seat_num" type="int">
+        <constraints primaryKey="true"/>
+      </column>
+      <column name="users_id" type="bigint">
+        <constraints nullable="false" foreignKeyName="users.id"/>
+      </column>
+    </createTable>
+  </changeSet>
+
+</databaseChangeLog>
