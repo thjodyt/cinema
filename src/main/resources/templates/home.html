@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Kino</title>
+</head>
+<body>
+
+  <form th:if="${!(user == null)}" method="POST" th:action="@{/cinema/logout}">
+    <button type="submit" name="submit" value="value">Wyloguj</button>
+  </form>
+
+  <h1>Cześć!</h1>
+  <a th:if="${user == null}" th:href="@{/cinema/sign-up}">Zarejestruj się</a>
+  <a th:if="${user == null}" th:href="@{/cinema/sign-in}">Zaloguj się</a>
+  <h2>Najlepsze filmy tylko u nas!</h2>
+
+</body>
+</html>

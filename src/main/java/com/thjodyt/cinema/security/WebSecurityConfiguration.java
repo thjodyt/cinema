@@ -36,8 +36,12 @@ public class WebSecurityConfiguration {
             .anyRequest().authenticated()
     ).formLogin(
         form -> form
-            .loginPage("/sign-in").permitAll()
-    ).logout(logout -> logout.logoutUrl("/cinema"));
+            .loginPage("/cinema/sign-in").permitAll()
+    ).logout(
+        logout -> logout
+            .logoutUrl("/cinema/logout").permitAll()
+            .logoutSuccessUrl("/cinema")
+    );
     return http.build();
   }
 

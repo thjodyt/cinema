@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Zarejestruj się</title>
+</head>
+<body>
+  <a th:href="@{/cinema}">Kino</a>
+  <div class="container">
+
+    <!--/*@thymesVar id="singingUser" type="com.thjodyt.cinema.data.SingingUser"*/-->
+    <form th:action="@{/cinema/sign-up}" method="post" th:object="${singingUser}">
+      <h2>Zarejestruj się:</h2>
+
+      <input type="text" th:field="*{name}" name="name" placeholder="Imię" required>
+      <input type="text" th:field="*{surname}" name="surname" placeholder="Nazwisko" required>
+      <input type="email" th:field="*{email}" name="email" placeholder="e-mail" required>
+      <input type="password" th:field="*{password}" name="password" placeholder="Hasło" required>
+      <input type="submit" value="Zarejestruj się" />
+
+      <a th:href="@{/cinema/sign-in}">Zaloguj się</a>
+
+    </form>
+
+  </div>
+</body>
+</html>
