@@ -1,7 +1,7 @@
 package com.thjodyt.cinema.data.model;
 
 import jakarta.persistence.*;
-import java.sql.Date;
+import java.time.LocalDateTime;
 import java.util.Collection;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,9 +13,9 @@ import lombok.Setter;
 public class Spectacle {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
-  private Date date;
+  private LocalDateTime date;
   private double price;
   @Column(name = "movies_id")
   private long moviesId;

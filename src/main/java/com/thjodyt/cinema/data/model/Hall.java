@@ -12,7 +12,7 @@ import lombok.Setter;
 public class Hall {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Long id;
   private String symbol;
   @Column(name = "r")
