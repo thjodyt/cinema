@@ -42,16 +42,16 @@ public class BootstrapDatabase {
   }
 
   private void createSpectacle(String title, String hallCode) {
-    Long moviesId = moviesRepository.findByTitle(title).orElseThrow().getId();;
-    Long hallsId = hallsRepository.findBySymbol(hallCode).orElseThrow().getId();
+    Movie movie = moviesRepository.findByTitle(title).orElseThrow();
+    Hall hall = hallsRepository.findBySymbol(hallCode).orElseThrow();
     for (int i = 1; i < 6; i++) {
       LocalDateTime dateTime = LocalDateTime.of(LocalDate.now().plusDays(i), LocalTime.of(10, 00));
-      if (spectaclesRepository.findByMoviesIdAndHallsIdAndDate(moviesId, hallsId, dateTime).isEmpty()) {
+      if (spectaclesRepository.findByMovieAndHallAndDate(movie, hall, dateTime).isEmpty()) {
         Spectacle spectacle = new Spectacle();
         spectacle.setDate(dateTime);
         spectacle.setPrice(50);
-        spectacle.setMoviesId(moviesId);
-        spectacle.setHallsId(hallsId);
+        spectacle.setMovie(movie);
+        spectacle.setHall(hall);
         spectaclesRepository.save(spectacle);
       }
     }

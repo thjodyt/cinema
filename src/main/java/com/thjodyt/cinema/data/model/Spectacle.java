@@ -17,10 +17,14 @@ public class Spectacle {
   private Long id;
   private LocalDateTime date;
   private double price;
-  @Column(name = "movies_id")
-  private long moviesId;
-  @Column(name = "halls_id")
-  private long hallsId;
+
+  @ManyToOne
+  @JoinColumn(name = "movies_id")
+  private Movie movie;
+
+  @ManyToOne
+  @JoinColumn(name = "halls_id")
+  private Hall hall;
 
   @OneToMany
   @JoinColumn(name = "spectacles_id")

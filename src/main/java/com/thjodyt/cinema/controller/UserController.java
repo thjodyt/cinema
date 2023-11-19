@@ -1,8 +1,11 @@
 package com.thjodyt.cinema.controller;
 
 import com.thjodyt.cinema.data.SingingUser;
+import com.thjodyt.cinema.data.SpectacleDTO;
 import com.thjodyt.cinema.security.PrincipalUser;
+import com.thjodyt.cinema.service.SpectaclesService;
 import com.thjodyt.cinema.service.UserService;
+import java.util.Collection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -18,12 +21,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class UserController {
 
   private final UserService userService;
+  private final SpectaclesService spectaclesService;
 
   @GetMapping
   public String home(@AuthenticationPrincipal PrincipalUser principalUser, Model model) {
     if (isLoggedIn(principalUser)) {
       model.addAttribute("user", principalUser.getUsername());
     }
+    Collection<SpectacleDTO> currentSpectacles = spectaclesService.getCurrentSpectacles();
+    model.addAttribute("spectacles", currentSpectacles);
     return "home";
   }
 
