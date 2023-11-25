@@ -1,6 +1,5 @@
 package com.thjodyt.cinema.service;
 
-import com.thjodyt.cinema.data.ReservationDTO;
 import com.thjodyt.cinema.data.SpectacleDTO;
 import com.thjodyt.cinema.data.dao.ReservationsRepository;
 import com.thjodyt.cinema.data.dao.SpectaclesRepository;
@@ -26,6 +25,13 @@ public class SpectaclesService {
         .collect(Collectors.toList());
   }
 
+  public SpectacleDTO getSpectacle(long id) {
+    return Mapper.map(
+        spectaclesRepository.findCurrentById(id, LocalDateTime.now())
+            .orElseThrow(SpectacleNotFoundException::new), reservationsRepository
+    );
+  }
+
   static class Mapper {
 
     static SpectacleDTO map(Spectacle spectacle, ReservationsRepository reservationsRepository) {
@@ -41,16 +47,14 @@ public class SpectaclesService {
           .stream()
           .map(Reservation::getSeatNum)
           .collect(Collectors.toList());
-      spectacleDTO.setReservationDto(new ReservationDTO[spectacle.getHall().getRows()][spectacle.getHall().getCols()]);
 
-      for (int row = 0; row < spectacleDTO.getReservationDto().length; row++) {
-        for (int col = 0; col < spectacleDTO.getReservationDto()[row].length; col++) {
-          int seatNum = row * spectacleDTO.getReservationDto()[row].length + col + 1;
-          if (seatsReserved.contains(seatNum)) {
-            ReservationDTO reservationDTO = new ReservationDTO();
-            reservationDTO.setSpectaclesId(spectacle.getId());
-            reservationDTO.setSeatNum(seatNum);
-            spectacleDTO.getReservationDto()[row][col] = reservationDTO;
+      spectacleDTO.setSeats(new Integer[spectacle.getHall().getRows()][spectacle.getHall().getCols()]);
+
+      for (int row = 0; row < spectacleDTO.getSeats().length; row++) {
+        for (int col = 0; col < spectacleDTO.getSeats()[row].length; col++) {
+          int seatNum = row * spectacleDTO.getSeats()[row].length + col + 1;
+          if (!seatsReserved.contains(seatNum)) {
+            spectacleDTO.getSeats()[row][col] = seatNum;
           }
         }
       }

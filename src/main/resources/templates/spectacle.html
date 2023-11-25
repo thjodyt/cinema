@@ -2,7 +2,7 @@
 <html lang="pl" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Kino</title>
+  <title>Spektakl</title>
 </head>
 <body>
 
@@ -15,17 +15,30 @@
   <a th:if="${user == null}" th:href="@{/cinema/sign-in}">Zaloguj się</a>
   <h2>Najlepsze filmy tylko u nas!</h2>
 
-  <div th:if="${spectacles.empty}">
-    <td colspan="2"> No spectacles available </td>
+  <div th:if="${spectacle == null}">
+    <td colspan="2"> No spectacle available </td>
   </div>
-  <div th:each="spectacle : ${spectacles}">
+  <div th:if="${spectacle != null}">
     <h3><span th:text="${spectacle.date}"></span></h3>
     <h3><span th:text="${spectacle.price}"></span></h3>
     <h3><span th:text="${spectacle.title}"></span></h3>
     <h3><span th:text="${spectacle.description}"></span></h3>
     <h3><span th:text="${spectacle.hallSymbol}"></span></h3>
-    <a th:href="@{'/cinema/spectacle/' + ${spectacle.id}}">Zobacz wolne miejsca</a>
   </div>
+
+  <form th:action="@{/cinema/reservation}" method="post" th:object="${reservationDetails}">
+    <input type="number" th:field="*{id}" name="id" th:value="${reservationDetails.id}" hidden>
+    <table>
+      <tr th:each="row : ${spectacle.seats}">
+        <td th:each="seat : ${row}">
+          <label>
+            <input type="checkbox" name="seats" th:text="${seat}" th:value="${seat}" th:field="*{seats}"/>
+          </label>
+        </td>
+      </tr>
+    </table>
+    <input type="submit" value="Rezerwacja" />
+  </form>
 
 </body>
 </html>

@@ -5,6 +5,7 @@ import com.thjodyt.cinema.data.model.Movie;
 import com.thjodyt.cinema.data.model.Spectacle;
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -13,7 +14,9 @@ import org.springframework.stereotype.Repository;
 public interface SpectaclesRepository extends JpaRepository<Spectacle, Long> {
 
   Collection<Spectacle> findByMovieAndHallAndDate(Movie movie, Hall hall, LocalDateTime dateTime);
-  @Query("select s from Spectacle s left join fetch s.movie left join fetch s.hall order by s.date")
+  @Query("select s from Spectacle s left join fetch s.movie left join fetch s.hall where s.date >= ?1 order by s.date")
   Collection<Spectacle> findAllCurrent(LocalDateTime dateTime);
+  @Query("select s from Spectacle s left join fetch s.movie left join fetch s.hall where s.id = ?1 and s.date >= ?2")
+  Optional<Spectacle> findCurrentById(long id, LocalDateTime dateTime);
 
 }
