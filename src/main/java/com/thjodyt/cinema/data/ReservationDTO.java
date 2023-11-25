@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class ReservationDTO {
 
-  private long spectaclesId;
   private int seatNum;
+  private boolean flag;
 
 }

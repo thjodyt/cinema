@@ -32,11 +32,16 @@ public class WebSecurityConfiguration {
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
     http.authorizeHttpRequests(
         req -> req
-            .requestMatchers("/cinema", "/cinema/sign-up").permitAll()
+            .requestMatchers(
+                "/cinema",
+                "/cinema/sign-up",
+                "/cinema/sign-in",
+                "/cinema/spectacle/**").permitAll()
             .anyRequest().authenticated()
     ).formLogin(
         form -> form
-            .loginPage("/cinema/sign-in").permitAll()
+            .loginPage("/cinema/sign-in")
+            .successForwardUrl("/cinema/user")
     ).logout(
         logout -> logout
             .logoutUrl("/cinema/logout").permitAll()

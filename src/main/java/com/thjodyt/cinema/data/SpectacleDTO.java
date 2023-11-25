@@ -14,6 +14,6 @@ public class SpectacleDTO {
   private String title;
   private String description;
   private String hallSymbol;
-  private ReservationDTO[][] reservationDto;
+  private Integer[][] seats;
 
 }
