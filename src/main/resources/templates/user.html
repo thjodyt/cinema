@@ -17,5 +17,16 @@
   <h2 th:text="${user.surname}"></h2>
   <h2 th:text="${user.email}"></h2>
 
+  <div th:each="reservation : ${reservations}">
+    <h3><span th:text="${reservation.date}"></span></h3>
+    <h3><span th:text="${reservation.price}"></span></h3>
+    <h3><span th:text="${reservation.title}"></span></h3>
+    <h3><span th:text="${reservation.description}"></span></h3>
+    <h3><span th:text="${reservation.hallSymbol}"></span></h3>
+    <h3><span th:each="seat : ${reservation.seats}">
+      <span th:text="${seat}"></span>
+    </span></h3>
+  </div>
+
 </body>
 </html>

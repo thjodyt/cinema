@@ -12,8 +12,9 @@ import lombok.Setter;
 public class Reservation {
 
   @Id
-  @Column(name = "spectacles_id")
-  private long spectaclesId;
+  @ManyToOne
+  @JoinColumn(name = "spectacles_id")
+  private Spectacle spectacle;
   @Id
   @Column(name = "seat_num")
   private int seatNum;

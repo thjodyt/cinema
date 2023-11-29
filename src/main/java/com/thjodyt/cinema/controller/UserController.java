@@ -3,21 +3,17 @@ package com.thjodyt.cinema.controller;
 import com.thjodyt.cinema.data.ReservationDetails;
 import com.thjodyt.cinema.data.SingingUser;
 import com.thjodyt.cinema.data.SpectacleDTO;
+import com.thjodyt.cinema.data.model.Spectacle;
 import com.thjodyt.cinema.security.PrincipalUser;
+import com.thjodyt.cinema.service.ReservationsService;
 import com.thjodyt.cinema.service.SpectaclesService;
 import com.thjodyt.cinema.service.UserService;
-import java.util.ArrayList;
 import java.util.Collection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequestMapping("/cinema")
@@ -26,6 +22,7 @@ public class UserController {
 
   private final UserService userService;
   private final SpectaclesService spectaclesService;
+  private final ReservationsService reservationsService;
 
   @GetMapping
   public String home(@AuthenticationPrincipal PrincipalUser principalUser, Model model) {
@@ -63,6 +60,7 @@ public class UserController {
   @GetMapping("/user")
   public String getUser(@AuthenticationPrincipal PrincipalUser principalUser, Model model) {
     model.addAttribute("user", principalUser.getUser());
+    model.addAttribute("reservations", reservationsService.getReservations(principalUser.getUser().getId()));
     return "user";
   }
 
@@ -80,9 +78,9 @@ public class UserController {
   }
 
   @PostMapping("/reservation")
-  public String reserve(@ModelAttribute ReservationDetails reservationDetails) {
-    // todo proceed reservation
-    System.out.println(reservationDetails.getId());
+  public String reserve(@ModelAttribute ReservationDetails reservationDetails, @AuthenticationPrincipal PrincipalUser principalUser) {
+    Spectacle spectacle =  spectaclesService.findById(reservationDetails.getId());
+    reservationsService.reserve(reservationDetails, principalUser.getUser(), spectacle);
     return "redirect:/cinema/user";
   }
 

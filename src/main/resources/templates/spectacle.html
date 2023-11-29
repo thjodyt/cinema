@@ -32,7 +32,7 @@
       <tr th:each="row : ${spectacle.seats}">
         <td th:each="seat : ${row}">
           <label>
-            <input type="checkbox" name="seats" th:text="${seat}" th:value="${seat}" th:field="*{seats}"/>
+            <input th:if="${seat != null}" type="checkbox" name="seats" th:text="${seat}" th:value="${seat}" th:field="*{seats}"/>
           </label>
         </td>
       </tr>

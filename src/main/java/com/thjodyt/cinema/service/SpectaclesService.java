@@ -32,6 +32,10 @@ public class SpectaclesService {
     );
   }
 
+  public Spectacle findById(Long id) {
+    return spectaclesRepository.findById(id).orElseThrow();
+  }
+
   static class Mapper {
 
     static SpectacleDTO map(Spectacle spectacle, ReservationsRepository reservationsRepository) {
@@ -43,7 +47,7 @@ public class SpectaclesService {
       spectacleDTO.setDescription(spectacle.getMovie().getDescription());
       spectacleDTO.setHallSymbol(spectacle.getHall().getSymbol());
 
-      List<Integer> seatsReserved = reservationsRepository.findAllBySpectaclesId(spectacle.getId())
+      List<Integer> seatsReserved = reservationsRepository.findAllBySpectacle(spectacle)
           .stream()
           .map(Reservation::getSeatNum)
           .collect(Collectors.toList());
