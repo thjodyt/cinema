@@ -4,6 +4,7 @@ import com.thjodyt.cinema.data.ReservationDetails;
 import com.thjodyt.cinema.data.SingingUser;
 import com.thjodyt.cinema.data.SpectacleDTO;
 import com.thjodyt.cinema.data.model.Spectacle;
+import com.thjodyt.cinema.data.model.User;
 import com.thjodyt.cinema.security.PrincipalUser;
 import com.thjodyt.cinema.service.ReservationsService;
 import com.thjodyt.cinema.service.SpectaclesService;
@@ -59,8 +60,12 @@ public class UserController {
 
   @GetMapping("/user")
   public String getUser(@AuthenticationPrincipal PrincipalUser principalUser, Model model) {
-    model.addAttribute("user", principalUser.getUser());
-    model.addAttribute("reservations", reservationsService.getReservations(principalUser.getUser().getId()));
+    User user = principalUser.getUser();
+    if (user.getRole().equals("ROLE_ADMIN")) {
+      return "redirect:/cinema/admin";
+    }
+    model.addAttribute("user", user);
+    model.addAttribute("reservations", reservationsService.getReservations(user.getId()));
     return "user";
   }
 
