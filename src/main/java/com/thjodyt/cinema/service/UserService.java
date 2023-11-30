@@ -35,6 +35,10 @@ public class UserService {
     usersRepository.save(Mapper.mapToUser(employee, password));
   }
 
+  public void deleteEmployee(String email) {
+    usersRepository.delete(usersRepository.findByEmail(email).orElseThrow());
+  }
+
   private static class Mapper {
 
     static User map(SingingUser singingUser, String password) {

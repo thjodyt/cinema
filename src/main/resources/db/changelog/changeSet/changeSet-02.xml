@@ -15,4 +15,12 @@
     </insert>
   </changeSet>
 
+  <changeSet id="7" author="michal">
+    <dropNotNullConstraint tableName="reservations" columnName="users_id" columnDataType="bigint"/>
+  </changeSet>
+
+  <changeSet id="8" author="michal">
+    <modifyDataType tableName="users" columnName="role" newDataType="varchar(12)"/>
+  </changeSet>
+
 </databaseChangeLog>

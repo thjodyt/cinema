@@ -53,4 +53,12 @@ public class RepresentativeController {
     return "redirect:/cinema/admin/staff";
   }
 
+  @PostMapping("staff/{email}")
+  public String deleteEmployee(@PathVariable String email, @AuthenticationPrincipal PrincipalUser principalUser) {
+    if (!principalUser.getUser().getEmail().equals(email)) {
+      userService.deleteEmployee(email);
+    }
+    return "redirect:/cinema/admin/staff";
+  }
+
 }

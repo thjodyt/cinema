@@ -19,7 +19,7 @@
 
   <a th:href="@{/cinema/admin/movies}">Filmy</a>
   <a th:href="@{/cinema/admin/spectacles}">Spektakle</a>
-  <a th:href="@{/cinema/admin/representatives}">Pracownicy</a>
+  <a th:href="@{/cinema/admin/staff}">Pracownicy</a>
 
   <form th:action="@{/cinema/admin/staff}" method="post" th:object="${employee}">
     <h2>Dodaj pracownika:</h2>
@@ -31,7 +31,7 @@
       <legend>Rola:</legend>
       <input type="radio" id="admin" name="role" value="ROLE_ADMIN" checked>
       <label for="admin">administrator</label>
-      <input type="radio" id="cashier" name="role" value="ROLE_CASH">
+      <input type="radio" id="cashier" name="role" value="ROLE_CASHIER">
       <label for="cashier">kasjer</label>
     </fieldset>
     <input type="submit" value="Dodaj"/>
@@ -43,6 +43,11 @@
     <h3><span th:text="${employee.surname}"></span></h3>
     <h3><span th:text="${employee.email}"></span></h3>
     <h3><span th:text="${employee.role}"></span></h3>
+
+    <form th:if="${employee.email} != ${user.email}" method="POST" th:action="@{'/cinema/admin/staff/' + ${employee.email}}">
+      <button type="submit" name="submit" value="value">Usuń</button>
+    </form>
+
   </div>
 
 </body>

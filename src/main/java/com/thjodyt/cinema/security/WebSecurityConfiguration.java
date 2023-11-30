@@ -1,6 +1,5 @@
 package com.thjodyt.cinema.security;
 
-import com.thjodyt.cinema.data.Role;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -41,7 +40,10 @@ public class WebSecurityConfiguration {
             .requestMatchers(
                 "/cinema/admin/**"
             ).hasRole("ADMIN")
-            .anyRequest().hasAnyRole("USER", "CASH")
+            .requestMatchers(
+                "/cinema/user"
+            ).authenticated()
+            .anyRequest().hasAnyRole("USER", "CASHIER")
     ).formLogin(
         form -> form
             .loginPage("/cinema/sign-in")
