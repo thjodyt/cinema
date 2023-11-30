@@ -30,7 +30,12 @@ public class UserService {
         .collect(Collectors.toList());
   }
 
-  static class Mapper {
+  public void createEmployee(Employee employee) {
+    String password = passwordEncoder.encode(employee.getName());
+    usersRepository.save(Mapper.mapToUser(employee, password));
+  }
+
+  private static class Mapper {
 
     static User map(SingingUser singingUser, String password) {
       User user = new User();
@@ -49,6 +54,16 @@ public class UserService {
       employee.setEmail(user.getEmail());
       employee.setRole(user.getRole());
       return employee;
+    }
+
+    public static User mapToUser(Employee employee, String password) {
+      User user = new User();
+      user.setName(employee.getName());
+      user.setSurname(employee.getSurname());
+      user.setEmail(employee.getEmail());
+      user.setPassword(password);
+      user.setRole(employee.getRole());
+      return user;
     }
   }
 }

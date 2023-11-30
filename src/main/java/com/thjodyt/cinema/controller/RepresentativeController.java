@@ -47,4 +47,10 @@ public class RepresentativeController {
     return "staff";
   }
 
+  @PostMapping("staff")
+  public String addEmployee(@ModelAttribute Employee employee) {
+    userService.createEmployee(employee);
+    return "redirect:/cinema/admin/staff";
+  }
+
 }
