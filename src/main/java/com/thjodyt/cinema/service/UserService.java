@@ -1,9 +1,12 @@
 package com.thjodyt.cinema.service;
 
+import com.thjodyt.cinema.data.Employee;
 import com.thjodyt.cinema.data.Role;
 import com.thjodyt.cinema.data.SingingUser;
 import com.thjodyt.cinema.data.dao.UsersRepository;
 import com.thjodyt.cinema.data.model.User;
+import java.util.Collection;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,6 +24,12 @@ public class UserService {
     usersRepository.save(user);
   }
 
+  public Collection<Employee> getStaff() {
+    return usersRepository.findStaff().stream()
+        .map(Mapper::mapToEmployee)
+        .collect(Collectors.toList());
+  }
+
   static class Mapper {
 
     static User map(SingingUser singingUser, String password) {
@@ -31,6 +40,15 @@ public class UserService {
       user.setPassword(password);
       user.setRole(Role.ROLE_USER.name());
       return user;
+    }
+
+    static Employee mapToEmployee(User user) {
+      Employee employee = new Employee();
+      employee.setName(user.getName());
+      employee.setSurname(user.getSurname());
+      employee.setEmail(user.getEmail());
+      employee.setRole(user.getRole());
+      return employee;
     }
   }
 }

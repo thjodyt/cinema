@@ -1,8 +1,10 @@
 package com.thjodyt.cinema.controller;
 
+import com.thjodyt.cinema.data.Employee;
 import com.thjodyt.cinema.data.MovieDTO;
 import com.thjodyt.cinema.security.PrincipalUser;
 import com.thjodyt.cinema.service.MoviesService;
+import com.thjodyt.cinema.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 public class RepresentativeController {
 
   private final MoviesService moviesService;
+  private final UserService userService;
 
   @GetMapping
   public String getAdminPanel(Model model, @AuthenticationPrincipal PrincipalUser principalUser) {
@@ -34,6 +37,14 @@ public class RepresentativeController {
   public String addMovie(@ModelAttribute MovieDTO movieDTO) {
     moviesService.addMovie(movieDTO);
     return "redirect:/cinema/admin/movies";
+  }
+
+  @GetMapping("staff")
+  public String getRepresentativesPanel(Model model, @AuthenticationPrincipal PrincipalUser principalUser) {
+    model.addAttribute("user", principalUser.getUser());
+    model.addAttribute("staff", userService.getStaff());
+    model.addAttribute("employee", new Employee());
+    return "staff";
   }
 
 }
