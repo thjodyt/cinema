@@ -14,6 +14,7 @@ public class ReservationDTO {
   private LocalDateTime date;
   private double price;
   private String title;
+  private int time;
   private String description;
   private String hallSymbol;
   private Collection<Integer> seats;

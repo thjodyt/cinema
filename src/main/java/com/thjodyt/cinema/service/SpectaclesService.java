@@ -44,6 +44,7 @@ public class SpectaclesService {
       spectacleDTO.setDate(spectacle.getDate());
       spectacleDTO.setPrice(spectacle.getPrice());
       spectacleDTO.setTitle(spectacle.getMovie().getTitle());
+      spectacleDTO.setTime(spectacle.getMovie().getTime());
       spectacleDTO.setDescription(spectacle.getMovie().getDescription());
       spectacleDTO.setHallSymbol(spectacle.getHall().getSymbol());
 

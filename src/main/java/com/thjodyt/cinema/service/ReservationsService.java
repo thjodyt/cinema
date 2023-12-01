@@ -51,6 +51,7 @@ public class ReservationsService {
           dto.setDate(reservation.getSpectacle().getDate());
           dto.setPrice(reservation.getSpectacle().getPrice());
           dto.setTitle(reservation.getSpectacle().getMovie().getTitle());
+          dto.setTime(reservation.getSpectacle().getMovie().getTime());
           dto.setDescription(reservation.getSpectacle().getMovie().getDescription());
           dto.setHallSymbol(reservation.getSpectacle().getHall().getSymbol());
           dto.setSeats(new ArrayList<>());

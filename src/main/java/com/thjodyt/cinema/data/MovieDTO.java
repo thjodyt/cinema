@@ -9,6 +9,7 @@ public class MovieDTO {
 
   private long id;
   private String title;
+  private int time;
   private String description;
 
 }

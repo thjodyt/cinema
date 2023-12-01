@@ -30,6 +30,7 @@ public class MoviesService {
       MovieDTO movieDTO = new MovieDTO();
       movieDTO.setId(movie.getId());
       movieDTO.setTitle(movie.getTitle());
+      movieDTO.setTime(movie.getTime());
       movieDTO.setDescription(movie.getDescription());
       return movieDTO;
     }
@@ -37,6 +38,7 @@ public class MoviesService {
     public static Movie map(MovieDTO movieDTO) {
       Movie movie = new Movie();
       movie.setTitle(movieDTO.getTitle());
+      movie.setTime(movieDTO.getTime());
       movie.setDescription(movieDTO.getDescription());
       return movie;
     }

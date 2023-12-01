@@ -16,6 +16,7 @@ public class Movie {
   private Long id;
   private String title;
   private String description;
+  private int time;
 
   @OneToMany
   @JoinColumn(name = "movies_id")

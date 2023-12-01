@@ -25,6 +25,7 @@
     <h2>Dodaj film:</h2>
 
     <input type="text" th:field="*{title}" name="title" placeholder="tytuł" required>
+    <input type="number" th:field="*{time}" step="1" name="time" placeholder="czas" required>
     <textarea type="text" th:field="*{description}" name="description" placeholder="Opis" required></textarea>
     <input type="submit" value="Dodaj"/>
 
@@ -32,6 +33,7 @@
 
   <div th:each="movie : ${movies}">
     <h3><span th:text="${movie.title}"></span></h3>
+    <h3><span th:text="${movie.time}"></span></h3>
     <h3><span th:text="${movie.description}"></span></h3>
   </div>
 

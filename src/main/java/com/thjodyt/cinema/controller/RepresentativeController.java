@@ -78,7 +78,7 @@ public class RepresentativeController {
 
   @PostMapping("spectacles")
   public String setSpectacle(@ModelAttribute CreatingSpectacle creatingSpectacle) {
-    // todo: validation hall mustn't be reserved - add time to movie record and SpectacleDTO
+    // todo: validation hall mustn't be reserved
     return "redirect:/cinema/admin/spectacles";
   }
 

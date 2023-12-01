@@ -23,4 +23,10 @@
     <modifyDataType tableName="users" columnName="role" newDataType="varchar(12)"/>
   </changeSet>
 
+  <changeSet id="9" author="michal">
+    <addColumn tableName="movies">
+      <column name="time" type="int" defaultValue="120" ><constraints nullable="false"/></column>
+    </addColumn>
+  </changeSet>
+
 </databaseChangeLog>
