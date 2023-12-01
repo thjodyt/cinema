@@ -7,6 +7,7 @@ import lombok.Setter;
 @Setter
 public class MovieDTO {
 
+  private long id;
   private String title;
   private String description;
 

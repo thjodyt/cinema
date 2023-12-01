@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Staff panel</title>
+</head>
+<body>
+
+  <a th:href="@{/cinema}">Kino</a>
+
+  <form th:if="${!(user == null)}" method="POST" th:action="@{/cinema/logout}">
+    <button type="submit" name="submit" value="value">Wyloguj</button>
+  </form>
+
+  <h1>Cześć! Jesteś administratorem</h1>
+  <h2 th:text="${user.name}"></h2>
+  <h2 th:text="${user.surname}"></h2>
+  <h2 th:text="${user.email}"></h2>
+
+  <a th:href="@{/cinema/admin/movies}">Filmy</a>
+  <a th:href="@{/cinema/admin/spectacles}">Spektakle</a>
+  <a th:href="@{/cinema/admin/staff}">Pracownicy</a>
+
+  <form th:action="@{/cinema/admin/spectacles}" method="post" th:object="${creatingSpectacle}">
+    <h2>Dodaj pracownika:</h2>
+
+    <input type="datetime-local" th:field="*{date}" name="date" required>
+    <input type="number" th:field="*{price}" name="price" placeholder="cena" required>
+
+    <fieldset>
+      <legend>Film:</legend>
+      <div th:each="movie : ${movies}">
+        <input type="radio" th:id="${movie.title}" th:name="movieId" th:value="${movie.id}">
+        <label th:for="${movie.title}" th:text="${movie.title}"></label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Hala:</legend>
+      <div th:each="hall : ${halls}">
+        <input type="radio" th:id="${hall.symbol}" th:name="hallId" th:value="${hall.id}">
+        <label th:for="${hall.symbol}" th:text="${hall.symbol}"></label>
+      </div>
+    </fieldset>
+    <input type="submit" value="Dodaj"/>
+
+  </form>
+
+  <div th:each="spectacle : ${spectacles}">
+
+    <h5><span th:text="${spectacle.date}"></span></h5>
+    <h5><span th:text="${spectacle.price}"></span></h5>
+    <h5><span th:text="${spectacle.title}"></span></h5>
+    <h5><span th:text="${spectacle.description}"></span></h5>
+    <h5><span th:text="${spectacle.hallSymbol}"></span></h5>
+
+  </div>
+
+</body>
+</html>

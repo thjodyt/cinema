@@ -1,9 +1,12 @@
 package com.thjodyt.cinema.controller;
 
+import com.thjodyt.cinema.data.CreatingSpectacle;
 import com.thjodyt.cinema.data.Employee;
 import com.thjodyt.cinema.data.MovieDTO;
 import com.thjodyt.cinema.security.PrincipalUser;
+import com.thjodyt.cinema.service.HallsService;
 import com.thjodyt.cinema.service.MoviesService;
+import com.thjodyt.cinema.service.SpectaclesService;
 import com.thjodyt.cinema.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -18,6 +21,8 @@ public class RepresentativeController {
 
   private final MoviesService moviesService;
   private final UserService userService;
+  private final HallsService hallsService;
+  private final SpectaclesService spectaclesService;
 
   @GetMapping
   public String getAdminPanel(Model model, @AuthenticationPrincipal PrincipalUser principalUser) {
@@ -59,6 +64,22 @@ public class RepresentativeController {
       userService.deleteEmployee(email);
     }
     return "redirect:/cinema/admin/staff";
+  }
+
+  @GetMapping("spectacles")
+  public String getSpectaclesPanel(Model model, @AuthenticationPrincipal PrincipalUser principalUser) {
+    model.addAttribute("user", principalUser.getUser());
+    model.addAttribute("movies", moviesService.getAllMovies());
+    model.addAttribute("halls", hallsService.getAllHalls());
+    model.addAttribute("spectacles", spectaclesService.getCurrentSpectacles());
+    model.addAttribute("creatingSpectacle", new CreatingSpectacle());
+    return "spectacles-panel";
+  }
+
+  @PostMapping("spectacles")
+  public String setSpectacle(@ModelAttribute CreatingSpectacle creatingSpectacle) {
+    // todo: validation hall mustn't be reserved - add time to movie record and SpectacleDTO
+    return "redirect:/cinema/admin/spectacles";
   }
 
 }

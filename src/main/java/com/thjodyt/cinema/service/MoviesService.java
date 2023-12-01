@@ -28,6 +28,7 @@ public class MoviesService {
 
     public static MovieDTO map(Movie movie) {
       MovieDTO movieDTO = new MovieDTO();
+      movieDTO.setId(movie.getId());
       movieDTO.setTitle(movie.getTitle());
       movieDTO.setDescription(movie.getDescription());
       return movieDTO;
