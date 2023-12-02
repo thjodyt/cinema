@@ -91,7 +91,15 @@ public class AdminController {
   }
 
   @PostMapping("spectacles")
-  public String setSpectacle(@ModelAttribute CreatingSpectacle creatingSpectacle) {
+  public String setSpectacle(@Valid @ModelAttribute CreatingSpectacle creatingSpectacle,
+      BindingResult bindingResult, Model model, @AuthenticationPrincipal PrincipalUser principalUser) {
+    if (bindingResult.hasErrors()) {
+      model.addAttribute("user", principalUser.getUserEntity());
+      model.addAttribute("movies", moviesService.getAllMovies());
+      model.addAttribute("halls", hallsService.getAllHalls());
+      model.addAttribute("spectacles", spectaclesService.getCurrentSpectacles());
+      return "spectacles-panel";
+    }
     spectaclesService.setSpectacle(creatingSpectacle);
     return "redirect:/cinema/admin/spectacles";
   }

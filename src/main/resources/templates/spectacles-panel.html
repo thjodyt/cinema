@@ -25,7 +25,10 @@
     <h2>Dodaj spektakl:</h2>
 
     <input type="datetime-local" th:field="*{date}" name="date" required>
+    <p th:each="err : ${#fields.errors('date')}" th:text="${err}" class="error"></p>
+
     <input type="number" th:field="*{price}" step="1" name="price" placeholder="cena" required>
+    <p th:each="err : ${#fields.errors('price')}" th:text="${err}" class="error"></p>
 
     <fieldset>
       <legend>Film:</legend>
@@ -34,6 +37,7 @@
         <label th:for="${movie.title}" th:text="${movie.title}"></label>
       </div>
     </fieldset>
+    <p th:each="err : ${#fields.errors('movieId')}" th:text="${err}" class="error"></p>
 
     <fieldset>
       <legend>Hala:</legend>
@@ -42,6 +46,8 @@
         <label th:for="${hall.symbol}" th:text="${hall.symbol}"></label>
       </div>
     </fieldset>
+    <p th:each="err : ${#fields.errors('hallId')}" th:text="${err}" class="error"></p>
+
     <input type="submit" value="Dodaj"/>
 
   </form>
