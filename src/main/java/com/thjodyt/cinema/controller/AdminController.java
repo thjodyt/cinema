@@ -8,10 +8,12 @@ import com.thjodyt.cinema.service.HallsService;
 import com.thjodyt.cinema.service.MoviesService;
 import com.thjodyt.cinema.service.SpectaclesService;
 import com.thjodyt.cinema.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -39,7 +41,13 @@ public class AdminController {
   }
 
   @PostMapping("movies")
-  public String addMovie(@ModelAttribute Movie movie) {
+  public String addMovie(@Valid @ModelAttribute Movie movie, BindingResult result, Model model,
+      @AuthenticationPrincipal PrincipalUser principalUser) {
+    if (result.hasErrors()) {
+      model.addAttribute("user", principalUser.getUserEntity());
+      model.addAttribute("movies", moviesService.getAllMovies());
+      return "movies";
+    }
     moviesService.addMovie(movie);
     return "redirect:/cinema/admin/movies";
   }

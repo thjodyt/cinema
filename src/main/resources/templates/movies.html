@@ -25,8 +25,14 @@
     <h2>Dodaj film:</h2>
 
     <input type="text" th:field="*{title}" name="title" placeholder="tytuł" required>
+    <p th:each="err : ${#fields.errors('title')}" th:text="${err}" class="error"></p>
+
     <input type="number" th:field="*{time}" step="1" name="time" placeholder="czas" required>
+    <p th:each="err : ${#fields.errors('time')}" th:text="${err}" class="error"></p>
+
     <textarea type="text" th:field="*{description}" name="description" placeholder="Opis" required></textarea>
+    <p th:each="err : ${#fields.errors('description')}" th:text="${err}" class="error"></p>
+
     <input type="submit" value="Dodaj"/>
 
   </form>
