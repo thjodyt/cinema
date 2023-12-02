@@ -10,10 +10,12 @@ import com.thjodyt.cinema.security.PrincipalUser;
 import com.thjodyt.cinema.service.ReservationsService;
 import com.thjodyt.cinema.service.SpectaclesService;
 import com.thjodyt.cinema.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
@@ -44,7 +46,10 @@ public class UserController {
   }
 
   @PostMapping("/sign-up")
-  public String signUp(@ModelAttribute SingingUser singingUser) {
+  public String signUp(@Valid @ModelAttribute SingingUser singingUser, BindingResult result) {
+    if (result.hasErrors()) {
+      return "sign-up";
+    }
     userService.createUser(singingUser);
     return "redirect:/cinema";
   }

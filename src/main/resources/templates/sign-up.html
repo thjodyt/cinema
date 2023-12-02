@@ -13,9 +13,17 @@
       <h2>Zarejestruj się:</h2>
 
       <input type="text" th:field="*{name}" name="name" placeholder="Imię" required>
+      <p th:each="err : ${#fields.errors('name')}" th:text="${err}" class="error"></p>
+
       <input type="text" th:field="*{surname}" name="surname" placeholder="Nazwisko" required>
+      <p th:each="err : ${#fields.errors('surname')}" th:text="${err}" class="error"></p>
+
       <input type="email" th:field="*{email}" name="email" placeholder="e-mail" required>
+      <p th:each="err : ${#fields.errors('email')}" th:text="${err}" class="error"></p>
+
       <input type="password" th:field="*{password}" name="password" placeholder="Hasło" required>
+      <p th:each="err : ${#fields.errors('password')}" th:text="${err}" class="error"></p>
+
       <input type="submit" value="Zarejestruj się" />
 
       <a th:href="@{/cinema/sign-in}">Zaloguj się</a>
