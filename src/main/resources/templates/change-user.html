@@ -18,10 +18,19 @@
     <h2>Zmień dane:</h2>
 
     <input type="text" th:field="*{name}" name="name" th:placeholder="${user.name}" required>
+    <p th:each="err : ${#fields.errors('name')}" th:text="${err}" class="error"></p>
+
     <input type="text" th:field="*{surname}" name="surname" th:placeholder="${user.surname}" required>
+    <p th:each="err : ${#fields.errors('surname')}" th:text="${err}" class="error"></p>
+
     <input type="email" th:field="*{email}" name="email" th:placeholder="${user.email}" required>
+    <p th:each="err : ${#fields.errors('email')}" th:text="${err}" class="error"></p>
+
     <input type="password" th:field="*{oldPassword}" name="oldPassword" placeholder="State hasło" required>
+
     <input type="password" th:field="*{newPassword}" name="newPassword" placeholder="Nowe hasło">
+    <p th:each="err : ${#fields.errors('newPassword')}" th:text="${err}" class="error"></p>
+
     <input type="submit" value="Zmień dane" />
 
   </form>

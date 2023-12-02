@@ -78,7 +78,12 @@ public class UserController {
   }
 
   @PostMapping("/user/change")
-  public String changeUserProperties(@ModelAttribute ChangingUser changingUser, @AuthenticationPrincipal PrincipalUser principalUser) {
+  public String changeUserProperties(@Valid @ModelAttribute ChangingUser changingUser,
+      BindingResult result, Model model, @AuthenticationPrincipal PrincipalUser principalUser) {
+    if (result.hasErrors()) {
+      model.addAttribute("user", principalUser.getUserEntity());
+      return "change-user";
+    }
     userService.changeUserDetails(changingUser, principalUser);
     return "redirect:/cinema/user";
   }

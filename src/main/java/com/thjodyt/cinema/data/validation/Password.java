@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
 @Documented
 public @interface Password {
 
-    String message() default "Hasło musi zawierać dużą i małą angielską literę oraz cyfrę.";
+    String message() default "Hasło musi zawierać 8 znaków w tym dużą i małą angielską literę oraz cyfrę.";
 
     Class<?>[] groups() default {};
 

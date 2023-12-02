@@ -24,7 +24,7 @@ public class SingingUser {
   @Email(message = "Niepoprawny adres e-mail.")
   private String email;
 
-  @Size(min = 8, message = "Hasło musi zawierać conajmniej 8 znaków.")
+  @NotBlank(message = "Hasło jest wymagane.")
   @Password
   private String password;
 
