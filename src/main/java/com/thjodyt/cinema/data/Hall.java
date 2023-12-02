@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class HallDTO {
+public class Hall {
 
   private Long id;
   private String symbol;

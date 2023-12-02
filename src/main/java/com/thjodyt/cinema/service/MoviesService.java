@@ -1,8 +1,9 @@
 package com.thjodyt.cinema.service;
 
-import com.thjodyt.cinema.data.MovieDTO;
+import com.thjodyt.cinema.data.Movie;
 import com.thjodyt.cinema.data.dao.MoviesRepository;
-import com.thjodyt.cinema.data.model.Movie;
+import com.thjodyt.cinema.data.model.MovieEntity;
+import com.thjodyt.cinema.service.exception.MovieNotFoundException;
 import java.util.Collection;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -14,38 +15,38 @@ public class MoviesService {
 
   private final MoviesRepository moviesRepository;
 
-  public Collection<MovieDTO> getAllMovies() {
+  public Collection<Movie> getAllMovies() {
     return moviesRepository.findAll().stream()
         .map(Mapper::map)
         .collect(Collectors.toList());
   }
 
-  public void addMovie(MovieDTO movieDTO) {
-    moviesRepository.save(Mapper.map(movieDTO));
+  public void addMovie(Movie movie) {
+    moviesRepository.save(Mapper.map(movie));
   }
 
-  public Movie getMovieById(long movieId) {
+  public MovieEntity getMovieById(long movieId) {
     return moviesRepository.findById(movieId)
         .orElseThrow(() -> new MovieNotFoundException(movieId));
   }
 
   private static class Mapper {
 
-    public static MovieDTO map(Movie movie) {
-      MovieDTO movieDTO = new MovieDTO();
-      movieDTO.setId(movie.getId());
-      movieDTO.setTitle(movie.getTitle());
-      movieDTO.setTime(movie.getTime());
-      movieDTO.setDescription(movie.getDescription());
-      return movieDTO;
+    public static Movie map(MovieEntity movieEntity) {
+      Movie movie = new Movie();
+      movie.setId(movieEntity.getId());
+      movie.setTitle(movieEntity.getTitle());
+      movie.setTime(movieEntity.getTime());
+      movie.setDescription(movieEntity.getDescription());
+      return movie;
     }
 
-    public static Movie map(MovieDTO movieDTO) {
-      Movie movie = new Movie();
-      movie.setTitle(movieDTO.getTitle());
-      movie.setTime(movieDTO.getTime());
-      movie.setDescription(movieDTO.getDescription());
-      return movie;
+    public static MovieEntity map(Movie movie) {
+      MovieEntity movieEntity = new MovieEntity();
+      movieEntity.setTitle(movie.getTitle());
+      movieEntity.setTime(movie.getTime());
+      movieEntity.setDescription(movie.getDescription());
+      return movieEntity;
     }
 
   }

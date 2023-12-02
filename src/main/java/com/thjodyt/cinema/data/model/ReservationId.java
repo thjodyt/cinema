@@ -6,7 +6,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode
 public class ReservationId implements Serializable {
 
-  private Spectacle spectacle;
+  private SpectacleEntity spectacleEntity;
   private int seatNum;
 
 }

@@ -6,7 +6,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SpectacleDTO {
+public class Spectacle {
 
   private Long id;
   private LocalDateTime date;

@@ -9,12 +9,12 @@ import lombok.Setter;
 @IdClass(ReservationId.class)
 @Getter
 @Setter
-public class Reservation {
+public class ReservationEntity {
 
   @Id
   @ManyToOne
   @JoinColumn(name = "spectacles_id")
-  private Spectacle spectacle;
+  private SpectacleEntity spectacleEntity;
   @Id
   @Column(name = "seat_num")
   private int seatNum;

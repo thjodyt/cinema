@@ -3,14 +3,13 @@ package com.thjodyt.cinema.controller;
 import com.thjodyt.cinema.data.ChangingUser;
 import com.thjodyt.cinema.data.ReservationDetails;
 import com.thjodyt.cinema.data.SingingUser;
-import com.thjodyt.cinema.data.SpectacleDTO;
-import com.thjodyt.cinema.data.model.Spectacle;
-import com.thjodyt.cinema.data.model.User;
+import com.thjodyt.cinema.data.Spectacle;
+import com.thjodyt.cinema.data.model.SpectacleEntity;
+import com.thjodyt.cinema.data.model.UserEntity;
 import com.thjodyt.cinema.security.PrincipalUser;
 import com.thjodyt.cinema.service.ReservationsService;
 import com.thjodyt.cinema.service.SpectaclesService;
 import com.thjodyt.cinema.service.UserService;
-import java.util.Collection;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -27,17 +26,17 @@ public class UserController {
   private final ReservationsService reservationsService;
 
   @GetMapping
-  public String home(@AuthenticationPrincipal PrincipalUser principalUser, Model model) {
-    if (isLoggedIn(principalUser)) {
-      model.addAttribute("user", principalUser.getUsername());
+  public String getHomePage(@AuthenticationPrincipal PrincipalUser user, Model model) {
+    if (isLoggedIn(user)) {
+      model.addAttribute("user", user.getUserEntity());
     }
     model.addAttribute("spectacles", spectaclesService.getCurrentSpectacles());
     return "home";
   }
 
   @GetMapping("/sign-up")
-  public String signUp(@AuthenticationPrincipal PrincipalUser principalUser, Model model) {
-    if (isLoggedIn(principalUser)) {
+  public String getSignUpPage(@AuthenticationPrincipal PrincipalUser user, Model model) {
+    if (isLoggedIn(user)) {
       return "redirect:/cinema/user";
     }
     model.addAttribute("singingUser", new SingingUser());
@@ -51,44 +50,40 @@ public class UserController {
   }
 
   @GetMapping("/sign-in")
-  public String signIn(@AuthenticationPrincipal PrincipalUser principalUser) {
-    if (isLoggedIn(principalUser)) {
+  public String getSignInPage(@AuthenticationPrincipal PrincipalUser user) {
+    if (isLoggedIn(user)) {
       return "redirect:/cinema/user";
     }
     return "sign-in";
   }
 
   @GetMapping("/user")
-  public String getUser(@AuthenticationPrincipal PrincipalUser principalUser, Model model) {
-    User user = principalUser.getUser();
-    model.addAttribute("user", user);
-    model.addAttribute("reservations", reservationsService.getReservations(user.getId()));
+  public String getUserPage(@AuthenticationPrincipal PrincipalUser principalUser, Model model) {
+    UserEntity userEntity = principalUser.getUserEntity();
+    model.addAttribute("user", userEntity);
+    model.addAttribute("reservations", reservationsService.getReservations(userEntity.getId()));
     return "user";
   }
 
   @GetMapping("/user/change")
-  public String getChangeUsersDetailsView(Model model, @AuthenticationPrincipal PrincipalUser principalUser) {
-    model.addAttribute("user", principalUser.getUser());
-    ChangingUser changingUser = new ChangingUser();
-    changingUser.setName(principalUser.getUser().getName());
-    changingUser.setSurname(principalUser.getUser().getSurname());
-    changingUser.setEmail(principalUser.getUser().getEmail());
-    model.addAttribute("changingUser", changingUser);
+  public String getChangeUsersPropertiesPage(Model model, @AuthenticationPrincipal PrincipalUser user) {
+    model.addAttribute("user", user.getUserEntity());
+    model.addAttribute("changingUser", createChangingUser(user));
     return "change-user";
   }
 
   @PostMapping("/user/change")
-  public String changeUserDetails(@ModelAttribute ChangingUser changingUser, @AuthenticationPrincipal PrincipalUser principalUser) {
+  public String changeUserProperties(@ModelAttribute ChangingUser changingUser, @AuthenticationPrincipal PrincipalUser principalUser) {
     userService.changeUserDetails(changingUser, principalUser);
     return "redirect:/cinema/user";
   }
 
   @GetMapping("/spectacle/{id}")
-  public String getSpectacle(@PathVariable long id, Model model, @AuthenticationPrincipal PrincipalUser principalUser) {
-    SpectacleDTO spectacle = spectaclesService.getSpectacle(id);
+  public String getSpectaclesReservationPage(@PathVariable long id, Model model, @AuthenticationPrincipal PrincipalUser user) {
+    Spectacle spectacle = spectaclesService.getSpectacle(id);
     model.addAttribute("spectacle", spectacle);
-    if (isLoggedIn(principalUser)) {
-      model.addAttribute("user", principalUser.getUser());
+    if (isLoggedIn(user)) {
+      model.addAttribute("user", user.getUserEntity());
     }
     ReservationDetails reservationDetails = new ReservationDetails();
     reservationDetails.setId(spectacle.getId());
@@ -97,14 +92,22 @@ public class UserController {
   }
 
   @PostMapping("/reservation")
-  public String reserve(@ModelAttribute ReservationDetails reservationDetails, @AuthenticationPrincipal PrincipalUser principalUser) {
-    Spectacle spectacle =  spectaclesService.findById(reservationDetails.getId());
-    reservationsService.reserve(reservationDetails, principalUser.getUser(), spectacle);
+  public String reserve(@ModelAttribute ReservationDetails reservationDetails, @AuthenticationPrincipal PrincipalUser user) {
+    SpectacleEntity spectacleEntity =  spectaclesService.findById(reservationDetails.getId());
+    reservationsService.reserve(reservationDetails, user.getUserEntity(), spectacleEntity);
     return "redirect:/cinema/user";
   }
 
   private boolean isLoggedIn(PrincipalUser principalUser) {
     return !(principalUser == null);
+  }
+
+  private ChangingUser createChangingUser(PrincipalUser principalUser) {
+    ChangingUser changingUser = new ChangingUser();
+    changingUser.setName(principalUser.getUserEntity().getName());
+    changingUser.setSurname(principalUser.getUserEntity().getSurname());
+    changingUser.setEmail(principalUser.getUserEntity().getEmail());
+    return changingUser;
   }
 
 }

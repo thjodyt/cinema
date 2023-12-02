@@ -9,7 +9,7 @@ import lombok.Setter;
 @Table(name = "users")
 @Getter
 @Setter
-public class User {
+public class UserEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,6 +24,6 @@ public class User {
 
   @OneToMany
   @JoinColumn(name = "users_id")
-  private Collection<Reservation> reservations;
+  private Collection<ReservationEntity> reservationEntities;
 
 }

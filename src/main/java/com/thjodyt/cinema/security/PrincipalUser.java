@@ -1,6 +1,6 @@
 package com.thjodyt.cinema.security;
 
-import com.thjodyt.cinema.data.model.User;
+import com.thjodyt.cinema.data.model.UserEntity;
 import java.util.Collection;
 import java.util.Collections;
 import lombok.AllArgsConstructor;
@@ -15,21 +15,21 @@ import org.springframework.security.core.userdetails.UserDetails;
 @Setter
 public class PrincipalUser implements UserDetails {
 
-  private User user;
+  private UserEntity userEntity;
 
   @Override
   public Collection<? extends GrantedAuthority> getAuthorities() {
-    return Collections.singleton(new SimpleGrantedAuthority(user.getRole()));
+    return Collections.singleton(new SimpleGrantedAuthority(userEntity.getRole()));
   }
 
   @Override
   public String getPassword() {
-    return user.getPassword();
+    return userEntity.getPassword();
   }
 
   @Override
   public String getUsername() {
-    return user.getEmail();
+    return userEntity.getEmail();
   }
 
   @Override

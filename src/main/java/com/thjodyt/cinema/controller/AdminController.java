@@ -2,7 +2,7 @@ package com.thjodyt.cinema.controller;
 
 import com.thjodyt.cinema.data.CreatingSpectacle;
 import com.thjodyt.cinema.data.Employee;
-import com.thjodyt.cinema.data.MovieDTO;
+import com.thjodyt.cinema.data.Movie;
 import com.thjodyt.cinema.security.PrincipalUser;
 import com.thjodyt.cinema.service.HallsService;
 import com.thjodyt.cinema.service.MoviesService;
@@ -26,27 +26,27 @@ public class AdminController {
 
   @GetMapping
   public String getAdminPanel(Model model, @AuthenticationPrincipal PrincipalUser principalUser) {
-    model.addAttribute("user", principalUser.getUser());
+    model.addAttribute("user", principalUser.getUserEntity());
     return "admin";
   }
 
   @GetMapping("movies")
   public String getMoviesPanel(Model model, @AuthenticationPrincipal PrincipalUser principalUser) {
-    model.addAttribute("user", principalUser.getUser());
+    model.addAttribute("user", principalUser.getUserEntity());
     model.addAttribute("movies", moviesService.getAllMovies());
-    model.addAttribute("movie", new MovieDTO());
+    model.addAttribute("movie", new Movie());
     return "movies";
   }
 
   @PostMapping("movies")
-  public String addMovie(@ModelAttribute MovieDTO movieDTO) {
-    moviesService.addMovie(movieDTO);
+  public String addMovie(@ModelAttribute Movie movie) {
+    moviesService.addMovie(movie);
     return "redirect:/cinema/admin/movies";
   }
 
   @GetMapping("staff")
-  public String getRepresentativesPanel(Model model, @AuthenticationPrincipal PrincipalUser principalUser) {
-    model.addAttribute("user", principalUser.getUser());
+  public String getStaffPanel(Model model, @AuthenticationPrincipal PrincipalUser principalUser) {
+    model.addAttribute("user", principalUser.getUserEntity());
     model.addAttribute("staff", userService.getStaff());
     model.addAttribute("employee", new Employee());
     return "staff";
@@ -60,7 +60,7 @@ public class AdminController {
 
   @PostMapping("staff/{email}")
   public String deleteEmployee(@PathVariable String email, @AuthenticationPrincipal PrincipalUser principalUser) {
-    if (!principalUser.getUser().getEmail().equals(email)) {
+    if (!principalUser.getUserEntity().getEmail().equals(email)) {
       userService.deleteEmployee(email);
     }
     return "redirect:/cinema/admin/staff";
@@ -68,7 +68,7 @@ public class AdminController {
 
   @GetMapping("spectacles")
   public String getSpectaclesPanel(Model model, @AuthenticationPrincipal PrincipalUser principalUser) {
-    model.addAttribute("user", principalUser.getUser());
+    model.addAttribute("user", principalUser.getUserEntity());
     model.addAttribute("movies", moviesService.getAllMovies());
     model.addAttribute("halls", hallsService.getAllHalls());
     model.addAttribute("spectacles", spectaclesService.getCurrentSpectacles());

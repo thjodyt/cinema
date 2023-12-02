@@ -1,8 +1,9 @@
 package com.thjodyt.cinema.service;
 
-import com.thjodyt.cinema.data.HallDTO;
+import com.thjodyt.cinema.data.Hall;
 import com.thjodyt.cinema.data.dao.HallsRepository;
-import com.thjodyt.cinema.data.model.Hall;
+import com.thjodyt.cinema.data.model.HallEntity;
+import com.thjodyt.cinema.service.exception.HallNotFoundException;
 import java.util.Collection;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
@@ -14,26 +15,26 @@ public class HallsService {
 
   private final HallsRepository hallsRepository;
 
-  public Collection<HallDTO> getAllHalls() {
+  public Collection<Hall> getAllHalls() {
     return hallsRepository.findAll().stream()
         .map(Mapper::map)
         .collect(Collectors.toList());
   }
 
-  public Hall getHallById(long hallId) {
+  public HallEntity getHallById(long hallId) {
     return hallsRepository.findById(hallId)
         .orElseThrow(() -> new HallNotFoundException(hallId));
   }
 
   private static class Mapper {
 
-    public static HallDTO map(Hall hall) {
-      HallDTO hallDTO = new HallDTO();
-      hallDTO.setId(hall.getId());
-      hallDTO.setSymbol(hall.getSymbol());
-      hallDTO.setRows(hall.getRows());
-      hallDTO.setCols(hall.getCols());
-      return hallDTO;
+    public static Hall map(HallEntity hallEntity) {
+      Hall hall = new Hall();
+      hall.setId(hallEntity.getId());
+      hall.setSymbol(hallEntity.getSymbol());
+      hall.setRows(hallEntity.getRows());
+      hall.setCols(hallEntity.getCols());
+      return hall;
     }
 
   }

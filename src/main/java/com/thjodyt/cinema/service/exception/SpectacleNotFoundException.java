@@ -1,4 +1,4 @@
-package com.thjodyt.cinema.service;
+package com.thjodyt.cinema.service.exception;
 
 public class SpectacleNotFoundException extends RuntimeException {
 

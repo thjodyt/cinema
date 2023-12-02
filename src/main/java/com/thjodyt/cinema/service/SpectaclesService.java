@@ -1,12 +1,14 @@
 package com.thjodyt.cinema.service;
 
 import com.thjodyt.cinema.data.CreatingSpectacle;
-import com.thjodyt.cinema.data.SpectacleDTO;
+import com.thjodyt.cinema.data.Spectacle;
 import com.thjodyt.cinema.data.dao.SpectaclesRepository;
-import com.thjodyt.cinema.data.model.Hall;
-import com.thjodyt.cinema.data.model.Movie;
-import com.thjodyt.cinema.data.model.Reservation;
-import com.thjodyt.cinema.data.model.Spectacle;
+import com.thjodyt.cinema.data.model.HallEntity;
+import com.thjodyt.cinema.data.model.MovieEntity;
+import com.thjodyt.cinema.data.model.ReservationEntity;
+import com.thjodyt.cinema.data.model.SpectacleEntity;
+import com.thjodyt.cinema.service.exception.HallAlreadyReservedException;
+import com.thjodyt.cinema.service.exception.SpectacleNotFoundException;
 import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
@@ -27,80 +29,80 @@ public class SpectaclesService {
   private final MoviesService moviesService;
   private final HallsService hallsService;
 
-  public Collection<SpectacleDTO> getCurrentSpectacles() {
+  public Collection<Spectacle> getCurrentSpectacles() {
     return spectaclesRepository.findAllCurrent(LocalDateTime.now()).stream()
         .map(Mapper::map)
         .collect(Collectors.toList());
   }
 
-  public SpectacleDTO getSpectacle(long id) {
+  public Spectacle getSpectacle(long id) {
     return Mapper.map(
         spectaclesRepository.findCurrentById(id, LocalDateTime.now())
             .orElseThrow(SpectacleNotFoundException::new)
     );
   }
 
-  public Spectacle findById(Long id) {
+  public SpectacleEntity findById(Long id) {
     return spectaclesRepository.findById(id).orElseThrow();
   }
 
   public void setSpectacle(CreatingSpectacle creatingSpectacle) {
-    Hall hall = hallsService.getHallById(creatingSpectacle.getHallId());
-    Movie movie = moviesService.getMovieById(creatingSpectacle.getMovieId());
+    HallEntity hallEntity = hallsService.getHallById(creatingSpectacle.getHallId());
+    MovieEntity movieEntity = moviesService.getMovieById(creatingSpectacle.getMovieId());
 
     LocalDateTime creatingSpectacleTimeStart = creatingSpectacle.getDate()
         .minusMinutes(ENTRANCE_TIME);
     LocalDateTime creatingSpectacleTimeEnd = creatingSpectacle.getDate()
         .plusMinutes(ADDS_TIME)
-        .plusMinutes(movie.getTime())
+        .plusMinutes(movieEntity.getTime())
         .plusMinutes(EXIT_TIME)
         .plusMinutes(CLEANING_TIME);
 
-    Collection<Spectacle> conflictingSpectacles = spectaclesRepository
-        .findConflictingSpectacles(hall, creatingSpectacleTimeStart, creatingSpectacleTimeEnd);
+    Collection<SpectacleEntity> conflictingSpectacleEntities = spectaclesRepository
+        .findConflictingSpectacles(hallEntity, creatingSpectacleTimeStart, creatingSpectacleTimeEnd);
 
-    if (conflictingSpectacles.isEmpty()) {
-      Spectacle spectacle = new Spectacle();
-      spectacle.setDate(creatingSpectacle.getDate());
-      spectacle.setPrice(creatingSpectacle.getPrice());
-      spectacle.setTimeStart(creatingSpectacleTimeStart);
-      spectacle.setTimeEnd(creatingSpectacleTimeEnd);
-      spectacle.setMovie(movie);
-      spectacle.setHall(hall);
-      spectaclesRepository.save(spectacle);
+    if (conflictingSpectacleEntities.isEmpty()) {
+      SpectacleEntity spectacleEntity = new SpectacleEntity();
+      spectacleEntity.setDate(creatingSpectacle.getDate());
+      spectacleEntity.setPrice(creatingSpectacle.getPrice());
+      spectacleEntity.setTimeStart(creatingSpectacleTimeStart);
+      spectacleEntity.setTimeEnd(creatingSpectacleTimeEnd);
+      spectacleEntity.setMovieEntity(movieEntity);
+      spectacleEntity.setHallEntity(hallEntity);
+      spectaclesRepository.save(spectacleEntity);
     } else {
-      throw new HallAlreadyReservedException(hall.getSymbol());
+      throw new HallAlreadyReservedException(hallEntity.getSymbol());
     }
   }
 
   static class Mapper {
 
-    static SpectacleDTO map(Spectacle spectacle) {
-      SpectacleDTO spectacleDTO = new SpectacleDTO();
-      spectacleDTO.setId(spectacle.getId());
-      spectacleDTO.setDate(spectacle.getDate());
-      spectacleDTO.setPrice(spectacle.getPrice());
-      spectacleDTO.setTitle(spectacle.getMovie().getTitle());
-      spectacleDTO.setTime(spectacle.getMovie().getTime());
-      spectacleDTO.setDescription(spectacle.getMovie().getDescription());
-      spectacleDTO.setHallSymbol(spectacle.getHall().getSymbol());
+    static Spectacle map(SpectacleEntity spectacleEntity) {
+      Spectacle spectacle = new Spectacle();
+      spectacle.setId(spectacleEntity.getId());
+      spectacle.setDate(spectacleEntity.getDate());
+      spectacle.setPrice(spectacleEntity.getPrice());
+      spectacle.setTitle(spectacleEntity.getMovieEntity().getTitle());
+      spectacle.setTime(spectacleEntity.getMovieEntity().getTime());
+      spectacle.setDescription(spectacleEntity.getMovieEntity().getDescription());
+      spectacle.setHallSymbol(spectacleEntity.getHallEntity().getSymbol());
 
-      List<Integer> seatsReserved = spectacle.getReservations().stream()
-          .map(Reservation::getSeatNum)
+      List<Integer> seatsReserved = spectacleEntity.getReservationEntities().stream()
+          .map(ReservationEntity::getSeatNum)
           .collect(Collectors.toList());
 
-      spectacleDTO.setSeats(new Integer[spectacle.getHall().getRows()][spectacle.getHall().getCols()]);
+      spectacle.setSeats(new Integer[spectacleEntity.getHallEntity().getRows()][spectacleEntity.getHallEntity().getCols()]);
 
-      for (int row = 0; row < spectacleDTO.getSeats().length; row++) {
-        for (int col = 0; col < spectacleDTO.getSeats()[row].length; col++) {
-          int seatNum = row * spectacleDTO.getSeats()[row].length + col + 1;
+      for (int row = 0; row < spectacle.getSeats().length; row++) {
+        for (int col = 0; col < spectacle.getSeats()[row].length; col++) {
+          int seatNum = row * spectacle.getSeats()[row].length + col + 1;
           if (!seatsReserved.contains(seatNum)) {
-            spectacleDTO.getSeats()[row][col] = seatNum;
+            spectacle.getSeats()[row][col] = seatNum;
           }
         }
       }
 
-      return spectacleDTO;
+      return spectacle;
     }
 
   }

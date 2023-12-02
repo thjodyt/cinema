@@ -5,7 +5,7 @@ import com.thjodyt.cinema.data.Employee;
 import com.thjodyt.cinema.data.Role;
 import com.thjodyt.cinema.data.SingingUser;
 import com.thjodyt.cinema.data.dao.UsersRepository;
-import com.thjodyt.cinema.data.model.User;
+import com.thjodyt.cinema.data.model.UserEntity;
 import com.thjodyt.cinema.security.PrincipalUser;
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -23,8 +23,8 @@ public class UserService {
 
   public void createUser(SingingUser singingUser) {
     String password = passwordEncoder.encode(singingUser.getPassword());
-    User user = Mapper.map(singingUser, password);
-    usersRepository.save(user);
+    UserEntity userEntity = Mapper.map(singingUser, password);
+    usersRepository.save(userEntity);
   }
 
   public Collection<Employee> getStaff() {
@@ -43,50 +43,50 @@ public class UserService {
   }
 
   public void changeUserDetails(ChangingUser changingUser, PrincipalUser principalUser) {
-    String email = principalUser.getUser().getEmail();
-    User oldUser = usersRepository.findByEmail(email)
+    String email = principalUser.getUserEntity().getEmail();
+    UserEntity oldUserEntity = usersRepository.findByEmail(email)
         .orElseThrow(() -> new UsernameNotFoundException("Could not find user: " + email));
-    if (passwordEncoder.matches(changingUser.getOldPassword(), oldUser.getPassword())) {
-      oldUser.setName(changingUser.getName());
-      oldUser.setSurname(changingUser.getSurname());
-      oldUser.setEmail(changingUser.getEmail());
+    if (passwordEncoder.matches(changingUser.getOldPassword(), oldUserEntity.getPassword())) {
+      oldUserEntity.setName(changingUser.getName());
+      oldUserEntity.setSurname(changingUser.getSurname());
+      oldUserEntity.setEmail(changingUser.getEmail());
       if (!(changingUser.getNewPassword().equals("") || changingUser.getNewPassword() == null)) {
-        oldUser.setPassword(passwordEncoder.encode(changingUser.getNewPassword()));
+        oldUserEntity.setPassword(passwordEncoder.encode(changingUser.getNewPassword()));
       }
-      usersRepository.save(oldUser);
-      principalUser.setUser(oldUser);
+      usersRepository.save(oldUserEntity);
+      principalUser.setUserEntity(oldUserEntity);
     }
   }
 
   private static class Mapper {
 
-    static User map(SingingUser singingUser, String password) {
-      User user = new User();
-      user.setName(singingUser.getName());
-      user.setSurname(singingUser.getSurname());
-      user.setEmail(singingUser.getEmail());
-      user.setPassword(password);
-      user.setRole(Role.ROLE_USER.name());
-      return user;
+    static UserEntity map(SingingUser singingUser, String password) {
+      UserEntity userEntity = new UserEntity();
+      userEntity.setName(singingUser.getName());
+      userEntity.setSurname(singingUser.getSurname());
+      userEntity.setEmail(singingUser.getEmail());
+      userEntity.setPassword(password);
+      userEntity.setRole(Role.ROLE_USER.name());
+      return userEntity;
     }
 
-    static Employee mapToEmployee(User user) {
+    static Employee mapToEmployee(UserEntity userEntity) {
       Employee employee = new Employee();
-      employee.setName(user.getName());
-      employee.setSurname(user.getSurname());
-      employee.setEmail(user.getEmail());
-      employee.setRole(user.getRole());
+      employee.setName(userEntity.getName());
+      employee.setSurname(userEntity.getSurname());
+      employee.setEmail(userEntity.getEmail());
+      employee.setRole(userEntity.getRole());
       return employee;
     }
 
-    public static User mapToUser(Employee employee, String password) {
-      User user = new User();
-      user.setName(employee.getName());
-      user.setSurname(employee.getSurname());
-      user.setEmail(employee.getEmail());
-      user.setPassword(password);
-      user.setRole(employee.getRole());
-      return user;
+    public static UserEntity mapToUser(Employee employee, String password) {
+      UserEntity userEntity = new UserEntity();
+      userEntity.setName(employee.getName());
+      userEntity.setSurname(employee.getSurname());
+      userEntity.setEmail(employee.getEmail());
+      userEntity.setPassword(password);
+      userEntity.setRole(employee.getRole());
+      return userEntity;
     }
   }
 }

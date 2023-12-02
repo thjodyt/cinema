@@ -8,7 +8,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ReservationDTO {
+public class Reservation {
 
   private long spectacleId;
   private LocalDateTime date;
@@ -24,10 +24,10 @@ public class ReservationDTO {
     if (this == o) {
       return true;
     }
-    if (!(o instanceof ReservationDTO)) {
+    if (!(o instanceof Reservation)) {
       return false;
     }
-    ReservationDTO that = (ReservationDTO) o;
+    Reservation that = (Reservation) o;
     return getSpectacleId() == that.getSpectacleId();
   }
 

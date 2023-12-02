@@ -1,7 +1,7 @@
 package com.thjodyt.cinema.security;
 
 import com.thjodyt.cinema.data.dao.UsersRepository;
-import com.thjodyt.cinema.data.model.User;
+import com.thjodyt.cinema.data.model.UserEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -16,9 +16,9 @@ public class CustomDetailsService implements UserDetailsService {
 
   @Override
   public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-    User user = usersRepository.findByEmail(email)
+    UserEntity userEntity = usersRepository.findByEmail(email)
         .orElseThrow(() -> new UsernameNotFoundException("Could not find user: " + email));
-    return new PrincipalUser(user);
+    return new PrincipalUser(userEntity);
   }
 
 }

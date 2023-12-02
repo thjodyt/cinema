@@ -10,7 +10,7 @@ import lombok.Setter;
 @Table(name = "spectacles")
 @Getter
 @Setter
-public class Spectacle {
+public class SpectacleEntity {
 
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,14 +22,14 @@ public class Spectacle {
 
   @ManyToOne
   @JoinColumn(name = "movies_id")
-  private Movie movie;
+  private MovieEntity movieEntity;
 
   @ManyToOne
   @JoinColumn(name = "halls_id")
-  private Hall hall;
+  private HallEntity hallEntity;
 
   @OneToMany
   @JoinColumn(name = "spectacles_id")
-  private Collection<Reservation> reservations;
+  private Collection<ReservationEntity> reservationEntities;
 
 }
