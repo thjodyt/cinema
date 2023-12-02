@@ -1,5 +1,6 @@
 package com.thjodyt.cinema.controller;
 
+import com.thjodyt.cinema.data.ChangingUser;
 import com.thjodyt.cinema.data.ReservationDetails;
 import com.thjodyt.cinema.data.SingingUser;
 import com.thjodyt.cinema.data.SpectacleDTO;
@@ -61,12 +62,26 @@ public class UserController {
   @GetMapping("/user")
   public String getUser(@AuthenticationPrincipal PrincipalUser principalUser, Model model) {
     User user = principalUser.getUser();
-    if (user.getRole().equals("ROLE_ADMIN")) {
-      return "redirect:/cinema/admin";
-    }
     model.addAttribute("user", user);
     model.addAttribute("reservations", reservationsService.getReservations(user.getId()));
     return "user";
+  }
+
+  @GetMapping("/user/change")
+  public String getChangeUsersDetailsView(Model model, @AuthenticationPrincipal PrincipalUser principalUser) {
+    model.addAttribute("user", principalUser.getUser());
+    ChangingUser changingUser = new ChangingUser();
+    changingUser.setName(principalUser.getUser().getName());
+    changingUser.setSurname(principalUser.getUser().getSurname());
+    changingUser.setEmail(principalUser.getUser().getEmail());
+    model.addAttribute("changingUser", changingUser);
+    return "change-user";
+  }
+
+  @PostMapping("/user/change")
+  public String changeUserDetails(@ModelAttribute ChangingUser changingUser, @AuthenticationPrincipal PrincipalUser principalUser) {
+    userService.changeUserDetails(changingUser, principalUser);
+    return "redirect:/cinema/user";
   }
 
   @GetMapping("/spectacle/{id}")

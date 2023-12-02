@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pl" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Change user properties</title>
+</head>
+<body>
+
+  <a th:href="@{/cinema}">Kino</a>
+  <a th:href="@{/cinema/user/change}">Zmiana danych</a>
+  <a th:if="${(user.role == 'ROLE_ADMIN')}" th:href="@{/cinema/admin}">Panel administratora</a>
+
+  <form method="POST" th:action="@{/cinema/logout}">
+    <button type="submit" name="submit" value="value">Wyloguj</button>
+  </form>
+
+  <form th:action="@{/cinema/user/change}" method="post" th:object="${changingUser}">
+    <h2>Zmień dane:</h2>
+
+    <input type="text" th:field="*{name}" name="name" th:placeholder="${user.name}" required>
+    <input type="text" th:field="*{surname}" name="surname" th:placeholder="${user.surname}" required>
+    <input type="email" th:field="*{email}" name="email" th:placeholder="${user.email}" required>
+    <input type="password" th:field="*{oldPassword}" name="oldPassword" placeholder="State hasło" required>
+    <input type="password" th:field="*{newPassword}" name="newPassword" placeholder="Nowe hasło">
+    <input type="submit" value="Zmień dane" />
+
+  </form>
+
+</body>
+</html>

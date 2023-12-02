@@ -41,7 +41,7 @@ public class WebSecurityConfiguration {
                 "/cinema/admin/**"
             ).hasRole("ADMIN")
             .requestMatchers(
-                "/cinema/user"
+                "/cinema/user/**"
             ).authenticated()
             .anyRequest().hasAnyRole("USER", "CASHIER")
     ).formLogin(

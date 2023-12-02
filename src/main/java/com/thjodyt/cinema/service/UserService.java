@@ -1,13 +1,16 @@
 package com.thjodyt.cinema.service;
 
+import com.thjodyt.cinema.data.ChangingUser;
 import com.thjodyt.cinema.data.Employee;
 import com.thjodyt.cinema.data.Role;
 import com.thjodyt.cinema.data.SingingUser;
 import com.thjodyt.cinema.data.dao.UsersRepository;
 import com.thjodyt.cinema.data.model.User;
+import com.thjodyt.cinema.security.PrincipalUser;
 import java.util.Collection;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +40,22 @@ public class UserService {
 
   public void deleteEmployee(String email) {
     usersRepository.delete(usersRepository.findByEmail(email).orElseThrow());
+  }
+
+  public void changeUserDetails(ChangingUser changingUser, PrincipalUser principalUser) {
+    String email = principalUser.getUser().getEmail();
+    User oldUser = usersRepository.findByEmail(email)
+        .orElseThrow(() -> new UsernameNotFoundException("Could not find user: " + email));
+    if (passwordEncoder.matches(changingUser.getOldPassword(), oldUser.getPassword())) {
+      oldUser.setName(changingUser.getName());
+      oldUser.setSurname(changingUser.getSurname());
+      oldUser.setEmail(changingUser.getEmail());
+      if (!(changingUser.getNewPassword().equals("") || changingUser.getNewPassword() == null)) {
+        oldUser.setPassword(passwordEncoder.encode(changingUser.getNewPassword()));
+      }
+      usersRepository.save(oldUser);
+      principalUser.setUser(oldUser);
+    }
   }
 
   private static class Mapper {

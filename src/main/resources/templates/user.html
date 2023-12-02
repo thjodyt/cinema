@@ -7,12 +7,17 @@
 <body>
 
   <a th:href="@{/cinema}">Kino</a>
+  <a th:href="@{/cinema/user/change}">Zmiana danych</a>
+  <a th:if="${(user.role == 'ROLE_ADMIN')}" th:href="@{/cinema/admin}">Panel administratora</a>
 
   <form method="POST" th:action="@{/cinema/logout}">
     <button type="submit" name="submit" value="value">Wyloguj</button>
   </form>
 
-  <h1>Cześć!</h1>
+  <h1>Cześć!
+    <span th:if="${(user.role == 'ROLE_ADMIN')}"> Jesteś administratorem</span>
+    <span th:if="${(user.role == 'ROLE_CASHIER')}"> Jesteś kasjerem</span>
+  </h1>
   <h2 th:text="${user.name}"></h2>
   <h2 th:text="${user.surname}"></h2>
   <h2 th:text="${user.email}"></h2>
