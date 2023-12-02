@@ -17,6 +17,8 @@ public class Spectacle {
   private Long id;
   private LocalDateTime date;
   private double price;
+  private LocalDateTime timeStart;
+  private LocalDateTime timeEnd;
 
   @ManyToOne
   @JoinColumn(name = "movies_id")

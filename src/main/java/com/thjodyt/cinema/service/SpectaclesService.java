@@ -1,8 +1,11 @@
 package com.thjodyt.cinema.service;
 
+import com.thjodyt.cinema.data.CreatingSpectacle;
 import com.thjodyt.cinema.data.SpectacleDTO;
 import com.thjodyt.cinema.data.dao.ReservationsRepository;
 import com.thjodyt.cinema.data.dao.SpectaclesRepository;
+import com.thjodyt.cinema.data.model.Hall;
+import com.thjodyt.cinema.data.model.Movie;
 import com.thjodyt.cinema.data.model.Reservation;
 import com.thjodyt.cinema.data.model.Spectacle;
 import java.time.LocalDateTime;
@@ -16,8 +19,15 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class SpectaclesService {
 
+  private final static long ENTRANCE_TIME = 20;
+  private final static long EXIT_TIME = 10;
+  private final static long ADDS_TIME = 20;
+  private final static long CLEANING_TIME =30;
+
   private final SpectaclesRepository spectaclesRepository;
   private final ReservationsRepository reservationsRepository;
+  private final MoviesService moviesService;
+  private final HallsService hallsService;
 
   public Collection<SpectacleDTO> getCurrentSpectacles() {
     return spectaclesRepository.findAllCurrent(LocalDateTime.now()).stream()
@@ -34,6 +44,34 @@ public class SpectaclesService {
 
   public Spectacle findById(Long id) {
     return spectaclesRepository.findById(id).orElseThrow();
+  }
+
+  public void setSpectacle(CreatingSpectacle creatingSpectacle) {
+    Hall hall = hallsService.getHallById(creatingSpectacle.getHallId());
+    Movie movie = moviesService.getMovieById(creatingSpectacle.getMovieId());
+
+    LocalDateTime creatingSpectacleTimeStart = creatingSpectacle.getDate()
+        .minusMinutes(ENTRANCE_TIME);
+    LocalDateTime creatingSpectacleTimeEnd = creatingSpectacle.getDate()
+        .plusMinutes(ADDS_TIME)
+        .plusMinutes(movie.getTime())
+        .plusMinutes(EXIT_TIME)
+        .plusMinutes(CLEANING_TIME);
+
+    Collection<Spectacle> conflictingSpectacles = spectaclesRepository.findConflictingSpectacles(hall, creatingSpectacleTimeStart, creatingSpectacleTimeEnd);
+
+    if (conflictingSpectacles.isEmpty()) {
+      Spectacle spectacle = new Spectacle();
+      spectacle.setDate(creatingSpectacle.getDate());
+      spectacle.setPrice(creatingSpectacle.getPrice());
+      spectacle.setTimeStart(creatingSpectacleTimeStart);
+      spectacle.setTimeEnd(creatingSpectacleTimeEnd);
+      spectacle.setMovie(movie);
+      spectacle.setHall(hall);
+      spectaclesRepository.save(spectacle);
+    } else {
+      throw new HallAlreadyReservedException(hall.getSymbol());
+    }
   }
 
   static class Mapper {

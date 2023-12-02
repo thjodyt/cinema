@@ -20,6 +20,11 @@ public class HallsService {
         .collect(Collectors.toList());
   }
 
+  public Hall getHallById(long hallId) {
+    return hallsRepository.findById(hallId)
+        .orElseThrow(() -> new HallNotFoundException(hallId));
+  }
+
   private static class Mapper {
 
     public static HallDTO map(Hall hall) {

@@ -24,6 +24,11 @@ public class MoviesService {
     moviesRepository.save(Mapper.map(movieDTO));
   }
 
+  public Movie getMovieById(long movieId) {
+    return moviesRepository.findById(movieId)
+        .orElseThrow(() -> new MovieNotFoundException(movieId));
+  }
+
   private static class Mapper {
 
     public static MovieDTO map(Movie movie) {

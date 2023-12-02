@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.*;
 @Controller
 @RequestMapping("cinema/admin")
 @RequiredArgsConstructor
-public class RepresentativeController {
+public class AdminController {
 
   private final MoviesService moviesService;
   private final UserService userService;
@@ -79,6 +79,7 @@ public class RepresentativeController {
   @PostMapping("spectacles")
   public String setSpectacle(@ModelAttribute CreatingSpectacle creatingSpectacle) {
     // todo: validation hall mustn't be reserved
+    spectaclesService.setSpectacle(creatingSpectacle);
     return "redirect:/cinema/admin/spectacles";
   }
 

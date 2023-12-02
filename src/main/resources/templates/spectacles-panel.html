@@ -22,7 +22,7 @@
   <a th:href="@{/cinema/admin/staff}">Pracownicy</a>
 
   <form th:action="@{/cinema/admin/spectacles}" method="post" th:object="${creatingSpectacle}">
-    <h2>Dodaj pracownika:</h2>
+    <h2>Dodaj spektakl:</h2>
 
     <input type="datetime-local" th:field="*{date}" name="date" required>
     <input type="number" th:field="*{price}" step="1" name="price" placeholder="cena" required>
