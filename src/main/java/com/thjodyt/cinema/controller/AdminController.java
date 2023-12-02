@@ -78,7 +78,6 @@ public class AdminController {
 
   @PostMapping("spectacles")
   public String setSpectacle(@ModelAttribute CreatingSpectacle creatingSpectacle) {
-    // todo: validation hall mustn't be reserved
     spectaclesService.setSpectacle(creatingSpectacle);
     return "redirect:/cinema/admin/spectacles";
   }
