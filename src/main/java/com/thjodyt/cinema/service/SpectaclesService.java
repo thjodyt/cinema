@@ -2,7 +2,6 @@ package com.thjodyt.cinema.service;
 
 import com.thjodyt.cinema.data.CreatingSpectacle;
 import com.thjodyt.cinema.data.SpectacleDTO;
-import com.thjodyt.cinema.data.dao.ReservationsRepository;
 import com.thjodyt.cinema.data.dao.SpectaclesRepository;
 import com.thjodyt.cinema.data.model.Hall;
 import com.thjodyt.cinema.data.model.Movie;
@@ -25,20 +24,19 @@ public class SpectaclesService {
   private final static long CLEANING_TIME =30;
 
   private final SpectaclesRepository spectaclesRepository;
-  private final ReservationsRepository reservationsRepository;
   private final MoviesService moviesService;
   private final HallsService hallsService;
 
   public Collection<SpectacleDTO> getCurrentSpectacles() {
     return spectaclesRepository.findAllCurrent(LocalDateTime.now()).stream()
-        .map(spectacle -> Mapper.map(spectacle, reservationsRepository))
+        .map(Mapper::map)
         .collect(Collectors.toList());
   }
 
   public SpectacleDTO getSpectacle(long id) {
     return Mapper.map(
         spectaclesRepository.findCurrentById(id, LocalDateTime.now())
-            .orElseThrow(SpectacleNotFoundException::new), reservationsRepository
+            .orElseThrow(SpectacleNotFoundException::new)
     );
   }
 
@@ -58,7 +56,8 @@ public class SpectaclesService {
         .plusMinutes(EXIT_TIME)
         .plusMinutes(CLEANING_TIME);
 
-    Collection<Spectacle> conflictingSpectacles = spectaclesRepository.findConflictingSpectacles(hall, creatingSpectacleTimeStart, creatingSpectacleTimeEnd);
+    Collection<Spectacle> conflictingSpectacles = spectaclesRepository
+        .findConflictingSpectacles(hall, creatingSpectacleTimeStart, creatingSpectacleTimeEnd);
 
     if (conflictingSpectacles.isEmpty()) {
       Spectacle spectacle = new Spectacle();
@@ -76,7 +75,7 @@ public class SpectaclesService {
 
   static class Mapper {
 
-    static SpectacleDTO map(Spectacle spectacle, ReservationsRepository reservationsRepository) {
+    static SpectacleDTO map(Spectacle spectacle) {
       SpectacleDTO spectacleDTO = new SpectacleDTO();
       spectacleDTO.setId(spectacle.getId());
       spectacleDTO.setDate(spectacle.getDate());
@@ -86,8 +85,7 @@ public class SpectaclesService {
       spectacleDTO.setDescription(spectacle.getMovie().getDescription());
       spectacleDTO.setHallSymbol(spectacle.getHall().getSymbol());
 
-      List<Integer> seatsReserved = reservationsRepository.findAllBySpectacle(spectacle)
-          .stream()
+      List<Integer> seatsReserved = spectacle.getReservations().stream()
           .map(Reservation::getSeatNum)
           .collect(Collectors.toList());
 

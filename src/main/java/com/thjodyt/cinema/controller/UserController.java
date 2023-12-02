@@ -31,8 +31,7 @@ public class UserController {
     if (isLoggedIn(principalUser)) {
       model.addAttribute("user", principalUser.getUsername());
     }
-    Collection<SpectacleDTO> currentSpectacles = spectaclesService.getCurrentSpectacles();
-    model.addAttribute("spectacles", currentSpectacles);
+    model.addAttribute("spectacles", spectaclesService.getCurrentSpectacles());
     return "home";
   }
 
