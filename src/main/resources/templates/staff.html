@@ -25,8 +25,14 @@
     <h2>Dodaj pracownika:</h2>
 
     <input type="text" th:field="*{name}" name="name" placeholder="imię" required>
+    <p th:each="err : ${#fields.errors('name')}" th:text="${err}" class="error"></p>
+
     <input type="text" th:field="*{surname}" name="surname" placeholder="nazwisko" required>
+    <p th:each="err : ${#fields.errors('surname')}" th:text="${err}" class="error"></p>
+
     <input type="text" th:field="*{email}" name="email" placeholder="e-mail" required>
+    <p th:each="err : ${#fields.errors('email')}" th:text="${err}" class="error"></p>
+
     <fieldset>
       <legend>Rola:</legend>
       <input type="radio" id="admin" name="role" value="ROLE_ADMIN" checked>

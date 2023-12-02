@@ -61,7 +61,13 @@ public class AdminController {
   }
 
   @PostMapping("staff")
-  public String addEmployee(@ModelAttribute Employee employee) {
+  public String addEmployee(@Valid @ModelAttribute Employee employee, BindingResult result,
+      Model model, @AuthenticationPrincipal PrincipalUser principalUser) {
+    if (result.hasErrors()) {
+      model.addAttribute("user", principalUser.getUserEntity());
+      model.addAttribute("staff", userService.getStaff());
+      return "staff";
+    }
     userService.createEmployee(employee);
     return "redirect:/cinema/admin/staff";
   }
