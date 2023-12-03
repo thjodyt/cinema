@@ -18,7 +18,7 @@ public class SingingUser {
   private String name;
 
   @NotBlank(message = "Nazwisko jest wymagane.")
-  @Size(min = 3, max = 35, message = "Pole musi zawierać od 3 do 35 znaków.")
+  @Size(min = 3, max = 35, message = "Nazwisko musi zawierać od 3 do 35 znaków.")
   private String surname;
 
   @NotBlank(message = "E-mail jest wymagany.")

@@ -16,7 +16,7 @@
   <h2>Najlepsze filmy tylko u nas!</h2>
 
   <div th:if="${spectacles.empty}">
-    <td colspan="2"> No spectacles available </td>
+    <h2> No spectacles available </h2>
   </div>
   <div th:each="spectacle : ${spectacles}">
     <h3><span th:text="${spectacle.date}"></span></h3>

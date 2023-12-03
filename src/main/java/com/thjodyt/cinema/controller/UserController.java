@@ -51,7 +51,7 @@ public class UserController {
       return "sign-up";
     }
     userService.createUser(singingUser);
-    return "redirect:/cinema";
+    return "redirect:/sign-in";
   }
 
   @GetMapping("/sign-in")
