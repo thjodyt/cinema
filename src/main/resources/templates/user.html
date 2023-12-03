@@ -3,35 +3,196 @@
 <head>
   <meta charset="UTF-8">
   <title>Użytkownik</title>
+  <style>
+    * {
+      font-family: 'Courier New', Courier, monospace;
+      background-color: #0f0f0f;
+      color: lightseagreen;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    #header button {
+      background: none;
+      border: none;
+      color: lightseagreen;
+      text-align: center;
+      padding: 3vh 4vw;
+    }
+
+    #header button:hover {
+      cursor: pointer;
+      background: lightseagreen;
+      color: #0f0f0f;
+    }
+
+    #container form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    #container > h2 {
+      margin-top: 2vh;
+      margin-bottom: 5vh;
+    }
+
+    #container > h3, #container > h6 {
+      margin-top: 7vh;
+    }
+
+    a {
+      color: #f9f9f9;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    a:hover {
+      color: goldenrod;
+    }
+
+    #container input {
+      background: none;
+      border: none;
+      color: #f9f9f9;
+      padding: 2vh 1vw;
+      margin-top: 1vh;
+      margin-left: 25vw;
+      margin-right: 25vw;
+      border-bottom: lightseagreen dotted 1px;
+    }
+
+    #container input:placeholder-shown {
+      color: lightseagreen;
+    }
+
+    #container input:focus {
+      outline: none;
+      border-bottom: lightseagreen solid 1px;
+    }
+
+    #container button {
+      background: none;
+      border-color: lightseagreen;
+      color: lightseagreen;
+      text-align: center;
+      padding: 2vh 1vw;
+      margin-top: 5vh;
+      margin-left: 35vw;
+      margin-right: 35vw;
+    }
+
+    #container button:hover {
+      cursor: pointer;
+      background: lightseagreen;
+      color: #0f0f0f;
+    }
+
+    #header {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      margin-bottom: 5vh;
+    }
+
+    #spectacles {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      flex-wrap: wrap;
+    }
+
+    .spectacle {
+      width: 25%;
+      padding: 3vh 3vw;
+    }
+
+    tr > td:first-child {
+      text-align: right;
+    }
+
+    tr > td:last-child {
+      text-align: left;
+    }
+
+    td {
+      padding: 1vh;
+    }
+
+    .spectacle p, .spectacle a {
+      padding: 3vh;
+    }
+
+    #footer {
+      padding: 5vh 3vw;
+    }
+  </style>
 </head>
 <body>
 
-  <a th:href="@{/cinema}">Kino</a>
-  <a th:href="@{/cinema/user/change}">Zmiana danych</a>
-  <a th:if="${(user.role == 'ROLE_ADMIN')}" th:href="@{/cinema/admin}">Panel administratora</a>
+  <div id="header">
 
-  <form method="POST" th:action="@{/cinema/logout}">
-    <button type="submit" name="submit" value="value">Wyloguj</button>
-  </form>
+    <form method="GET" th:action="@{/cinema}">
+      <button type="submit">Kino</button>
+    </form>
 
-  <h1>Cześć!
-    <span th:if="${(user.role == 'ROLE_ADMIN')}"> Jesteś administratorem</span>
-    <span th:if="${(user.role == 'ROLE_CASHIER')}"> Jesteś kasjerem</span>
-  </h1>
-  <h2 th:text="${user.name}"></h2>
-  <h2 th:text="${user.surname}"></h2>
-  <h2 th:text="${user.email}"></h2>
+    <form method="GET" th:action="@{/cinema/user}">
+      <button type="submit" th:text="${user.name}"></button>
+    </form>
 
-  <div th:each="reservation : ${reservations}">
-    <h3><span th:text="${reservation.date}"></span></h3>
-    <h3><span th:text="${reservation.price}"></span></h3>
-    <h3><span th:text="${reservation.title}"></span></h3>
-    <h3><span th:text="${reservation.time}"></span></h3>
-    <h3><span th:text="${reservation.description}"></span></h3>
-    <h3><span th:text="${reservation.hallSymbol}"></span></h3>
-    <h3><span th:each="seat : ${reservation.seats}">
-      <span th:text="${seat}"></span>
-    </span></h3>
+    <form method="GET" th:action="@{/cinema/user/change}">
+      <button type="submit">Zmiana danych</button>
+    </form>
+
+    <form th:if="${(user.role == 'ROLE_ADMIN')}" method="GET" th:action="@{/cinema/admin}">
+      <button type="submit">Panel administratora</button>
+    </form>
+
+    <form method="POST" th:action="@{/cinema/logout}">
+      <button type="submit">Wyloguj</button>
+    </form>
+
+  </div>
+
+  <div id="container">
+
+    <h2>Cześć!
+      <span th:text="${user.name} + '.'"></span>
+      <span th:if="${(user.role == 'ROLE_ADMIN')}"> Jesteś administratorem.</span>
+      <span th:if="${(user.role == 'ROLE_CASHIER')}"> Jesteś kasjerem.</span>
+    </h2>
+
+    <div id="spectacles">
+
+      <div class="spectacle" th:each="reservation : ${reservations}">
+        <table>
+          <tr><td>Data: </td><td th:text="${reservation.date}"></td></tr>
+          <tr><td>Tytuł: </td><td th:text="${reservation.title}"></td></tr>
+          <tr><td>Cena: </td><td th:text="${reservation.price} + ' zł'"></td></tr>
+          <tr><td>Czas: </td><td th:text="${reservation.time} + ' min'"></td></tr>
+          <tr><td>Sala: </td><td th:text="${reservation.hallSymbol}"></td></tr>
+          <tr><td>Miejsca: </td><td>
+            <span th:each="seat : ${reservation.seats}">
+              <span th:text="${seat}"></span>
+            </span>
+          </td></tr>
+        </table>
+        <p th:text="${reservation.description}"></p>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div id="footer">
+    <h3>Projekt zespołowy</h3>
   </div>
 
 </body>

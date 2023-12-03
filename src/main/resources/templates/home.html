@@ -149,6 +149,18 @@
       <button type="submit">Kino</button>
     </form>
 
+    <form th:if="${(user != null)}" method="GET" th:action="@{/cinema/user}">
+      <button type="submit" th:text="${user.name}"></button>
+    </form>
+
+    <form th:if="${(user != null)}" method="GET" th:action="@{/cinema/user/change}">
+      <button type="submit">Zmiana danych</button>
+    </form>
+
+    <form th:if="${(user != null) and (user.role == 'ROLE_ADMIN')}" method="GET" th:action="@{/cinema/admin}">
+      <button type="submit">Panel administratora</button>
+    </form>
+
     <div id="sign-in-up" th:if="${user == null}">
       <form method="GET" th:action="@{/cinema/sign-in}">
         <button type="submit">Logowanie</button>
@@ -158,7 +170,7 @@
       </form>
     </div>
 
-    <form th:if="${!(user == null)}" method="POST" th:action="@{/cinema/logout}">
+    <form th:if="${(user != null)}" method="POST" th:action="@{/cinema/logout}">
       <button type="submit">Wyloguj</button>
     </form>
 
