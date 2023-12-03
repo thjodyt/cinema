@@ -3,29 +3,207 @@
 <head>
   <meta charset="UTF-8">
   <title>Kino</title>
+  <style>
+    * {
+      font-family: 'Courier New', Courier, monospace;
+      background-color: #0f0f0f;
+      color: lightseagreen;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    #header button {
+      background: none;
+      border: none;
+      color: lightseagreen;
+      text-align: center;
+      padding: 3vh 4vw;
+    }
+
+    #header button:hover {
+      cursor: pointer;
+      background: lightseagreen;
+      color: #0f0f0f;
+    }
+
+    #container form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    #container > h2 {
+      margin-top: 2vh;
+      margin-bottom: 5vh;
+    }
+
+    #container > h3, #container > h6 {
+      margin-top: 7vh;
+    }
+
+    a {
+      color: #f9f9f9;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    a:hover {
+      color: goldenrod;
+    }
+
+    #container input {
+      background: none;
+      border: none;
+      color: #f9f9f9;
+      padding: 2vh 1vw;
+      margin-top: 1vh;
+      margin-left: 25vw;
+      margin-right: 25vw;
+      border-bottom: lightseagreen dotted 1px;
+    }
+
+    #container input:placeholder-shown {
+      color: lightseagreen;
+    }
+
+    #container input:focus {
+      outline: none;
+      border-bottom: lightseagreen solid 1px;
+    }
+
+    #container button {
+      background: none;
+      border-color: lightseagreen;
+      color: lightseagreen;
+      text-align: center;
+      padding: 2vh 1vw;
+      margin-top: 5vh;
+      margin-left: 35vw;
+      margin-right: 35vw;
+    }
+
+    #container button:hover {
+      cursor: pointer;
+      background: lightseagreen;
+      color: #0f0f0f;
+    }
+
+    #header {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      margin-bottom: 5vh;
+    }
+
+    #sign-in-up {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+    }
+
+    #spectacles {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      flex-wrap: wrap;
+    }
+
+    .spectacle {
+      width: 25%;
+      padding: 3vh 3vw;
+    }
+
+    tr > td:first-child {
+      text-align: right;
+    }
+
+    tr > td:last-child {
+      text-align: left;
+    }
+
+    td {
+      padding: 1vh;
+    }
+
+    .spectacle p, .spectacle a {
+      padding: 3vh;
+    }
+
+    #footer {
+      padding: 5vh 3vw;
+    }
+  </style>
 </head>
 <body>
 
-  <form th:if="${!(user == null)}" method="POST" th:action="@{/cinema/logout}">
-    <button type="submit" name="submit" value="value">Wyloguj</button>
-  </form>
+  <div id="header">
 
-  <h1>Cześć!</h1>
-  <a th:if="${user == null}" th:href="@{/cinema/sign-up}">Zarejestruj się</a>
-  <a th:if="${user == null}" th:href="@{/cinema/sign-in}">Zaloguj się</a>
-  <h2>Najlepsze filmy tylko u nas!</h2>
+    <form method="GET" th:action="@{/cinema}">
+      <button type="submit">Kino</button>
+    </form>
 
-  <div th:if="${spectacles.empty}">
-    <h2> No spectacles available </h2>
+    <div id="sign-in-up" th:if="${user == null}">
+      <form method="GET" th:action="@{/cinema/sign-in}">
+        <button type="submit">Logowanie</button>
+      </form>
+      <form method="GET" th:action="@{/cinema/sign-up}">
+        <button type="submit">Rejestracja</button>
+      </form>
+    </div>
+
+    <form th:if="${!(user == null)}" method="POST" th:action="@{/cinema/logout}">
+      <button type="submit">Wyloguj</button>
+    </form>
+
   </div>
-  <div th:each="spectacle : ${spectacles}">
-    <h3><span th:text="${spectacle.date}"></span></h3>
-    <h3><span th:text="${spectacle.price}"></span></h3>
-    <h3><span th:text="${spectacle.title}"></span></h3>
-    <h3><span th:text="${spectacle.time}"></span></h3>
-    <h3><span th:text="${spectacle.description}"></span></h3>
-    <h3><span th:text="${spectacle.hallSymbol}"></span></h3>
-    <a th:href="@{'/cinema/spectacle/' + ${spectacle.id}}">Zobacz wolne miejsca</a>
+
+  <div id="container">
+
+    <h2 th:if="${!spectacles.empty}">Najlepsze filmy, najlepszy popcorn</h2>
+    <h2 th:if="${spectacles.empty}">Brak dostępnych spektakli, zapraszamy wkrótce.</h2>
+
+    <div id="spectacles">
+
+      <div class="spectacle" th:each="spectacle : ${spectacles}">
+        <table>
+          <tr>
+            <td>Data: </td>
+            <td th:text="${spectacle.date}"></td>
+          </tr>
+          <tr>
+            <td>Tytuł: </td>
+            <td th:text="${spectacle.title}"></td>
+          </tr>
+          <tr>
+            <td>Cena: </td>
+            <td th:text="${spectacle.price} + ' zł'"></td>
+          </tr>
+          <tr>
+            <td>Czas: </td>
+            <td th:text="${spectacle.time} + ' min'"></td>
+          </tr>
+          <tr>
+            <td>Sala: </td>
+            <td th:text="${spectacle.hallSymbol}"></td>
+          </tr>
+        </table>
+        <p th:text="${spectacle.description}"></p>
+        <a th:href="@{'/cinema/spectacle/' + ${spectacle.id}}">Zobacz wolne miejsca</a>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div id="footer">
+    <h3>Projekt zespołowy</h3>
   </div>
 
 </body>
