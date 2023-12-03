@@ -47,7 +47,7 @@ public class WebSecurityConfiguration {
     ).formLogin(
         form -> form
             .loginPage("/cinema/sign-in")
-            .successForwardUrl("/cinema/user")
+            .defaultSuccessUrl("/cinema/user")
     ).logout(
         logout -> logout
             .logoutUrl("/cinema/logout").permitAll()

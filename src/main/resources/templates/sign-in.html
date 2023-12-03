@@ -11,8 +11,7 @@
     <form th:action="@{/cinema/sign-in}" method="POST">
       <h2>Zaloguj się</h2>
 
-      <h5 th:if="${param.error}">Invalid username and password.</h5>
-      <h5 th:if="${param.logout}">You have been logged out.</h5>
+      <p th:if="${param.error}">Niepoprawne dane logowania.</p>
 
       <input type="text" name="username" placeholder="e-mail"/>
       <input type="password" name="password" placeholder="hasło"/>
