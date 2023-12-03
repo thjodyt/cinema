@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.HtmlUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -82,10 +83,10 @@ public class SpectaclesService {
       spectacle.setId(spectacleEntity.getId());
       spectacle.setDate(spectacleEntity.getDate());
       spectacle.setPrice(spectacleEntity.getPrice());
-      spectacle.setTitle(spectacleEntity.getMovieEntity().getTitle());
+      spectacle.setTitle(HtmlUtils.htmlEscape(spectacleEntity.getMovieEntity().getTitle()));
       spectacle.setTime(spectacleEntity.getMovieEntity().getTime());
-      spectacle.setDescription(spectacleEntity.getMovieEntity().getDescription());
-      spectacle.setHallSymbol(spectacleEntity.getHallEntity().getSymbol());
+      spectacle.setDescription(HtmlUtils.htmlEscape(spectacleEntity.getMovieEntity().getDescription()));
+      spectacle.setHallSymbol(HtmlUtils.htmlEscape(spectacleEntity.getHallEntity().getSymbol()));
 
       List<Integer> seatsReserved = spectacleEntity.getReservationEntities().stream()
           .map(ReservationEntity::getSeatNum)

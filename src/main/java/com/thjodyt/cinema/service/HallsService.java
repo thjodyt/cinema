@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.HtmlUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -31,7 +32,7 @@ public class HallsService {
     public static Hall map(HallEntity hallEntity) {
       Hall hall = new Hall();
       hall.setId(hallEntity.getId());
-      hall.setSymbol(hallEntity.getSymbol());
+      hall.setSymbol(HtmlUtils.htmlEscape(hallEntity.getSymbol()));
       hall.setRows(hallEntity.getRows());
       hall.setCols(hallEntity.getCols());
       return hall;

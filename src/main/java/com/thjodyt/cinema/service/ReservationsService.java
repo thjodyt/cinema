@@ -11,6 +11,7 @@ import java.util.Collection;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.HtmlUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -43,20 +44,20 @@ public class ReservationsService {
     static Collection<Reservation> map(Collection<ReservationEntity> reservationEntities) {
       List<Reservation> result = new ArrayList<>();
       for (ReservationEntity reservationEntity : reservationEntities) {
-        Reservation dto = new Reservation();
-        dto.setSpectacleId(reservationEntity.getSpectacleEntity().getId());
-        if (result.contains(dto)) {
-          result.get(result.indexOf(dto)).getSeats().add(reservationEntity.getSeatNum());
+        Reservation reservation = new Reservation();
+        reservation.setSpectacleId(reservationEntity.getSpectacleEntity().getId());
+        if (result.contains(reservation)) {
+          result.get(result.indexOf(reservation)).getSeats().add(reservationEntity.getSeatNum());
         } else {
-          dto.setDate(reservationEntity.getSpectacleEntity().getDate());
-          dto.setPrice(reservationEntity.getSpectacleEntity().getPrice());
-          dto.setTitle(reservationEntity.getSpectacleEntity().getMovieEntity().getTitle());
-          dto.setTime(reservationEntity.getSpectacleEntity().getMovieEntity().getTime());
-          dto.setDescription(reservationEntity.getSpectacleEntity().getMovieEntity().getDescription());
-          dto.setHallSymbol(reservationEntity.getSpectacleEntity().getHallEntity().getSymbol());
-          dto.setSeats(new ArrayList<>());
-          dto.getSeats().add(reservationEntity.getSeatNum());
-          result.add(dto);
+          reservation.setDate(reservationEntity.getSpectacleEntity().getDate());
+          reservation.setPrice(reservationEntity.getSpectacleEntity().getPrice());
+          reservation.setTitle(HtmlUtils.htmlEscape(reservationEntity.getSpectacleEntity().getMovieEntity().getTitle()));
+          reservation.setTime(reservationEntity.getSpectacleEntity().getMovieEntity().getTime());
+          reservation.setDescription(HtmlUtils.htmlEscape(reservationEntity.getSpectacleEntity().getMovieEntity().getDescription()));
+          reservation.setHallSymbol(HtmlUtils.htmlEscape(reservationEntity.getSpectacleEntity().getHallEntity().getSymbol()));
+          reservation.setSeats(new ArrayList<>());
+          reservation.getSeats().add(reservationEntity.getSeatNum());
+          result.add(reservation);
         }
       }
       return result;

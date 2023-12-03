@@ -8,6 +8,7 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.HtmlUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -35,9 +36,9 @@ public class MoviesService {
     public static Movie map(MovieEntity movieEntity) {
       Movie movie = new Movie();
       movie.setId(movieEntity.getId());
-      movie.setTitle(movieEntity.getTitle());
+      movie.setTitle(HtmlUtils.htmlEscape(movieEntity.getTitle()));
       movie.setTime(movieEntity.getTime());
-      movie.setDescription(movieEntity.getDescription());
+      movie.setDescription(HtmlUtils.htmlEscape(movieEntity.getDescription()));
       return movie;
     }
 

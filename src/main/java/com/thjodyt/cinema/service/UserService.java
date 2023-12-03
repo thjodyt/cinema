@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.util.HtmlUtils;
 
 @Service
 @RequiredArgsConstructor
@@ -47,8 +48,8 @@ public class UserService {
     UserEntity oldUserEntity = usersRepository.findByEmail(email)
         .orElseThrow(() -> new UsernameNotFoundException("Could not find user: " + email));
     if (passwordEncoder.matches(changingUser.getOldPassword(), oldUserEntity.getPassword())) {
-      oldUserEntity.setName(changingUser.getName());
-      oldUserEntity.setSurname(changingUser.getSurname());
+      oldUserEntity.setName(HtmlUtils.htmlEscape(changingUser.getName()));
+      oldUserEntity.setSurname(HtmlUtils.htmlEscape(changingUser.getSurname()));
       oldUserEntity.setEmail(changingUser.getEmail());
       if (!(changingUser.getNewPassword().equals("") || changingUser.getNewPassword() == null)) {
         oldUserEntity.setPassword(passwordEncoder.encode(changingUser.getNewPassword()));
@@ -62,8 +63,8 @@ public class UserService {
 
     static UserEntity map(SingingUser singingUser, String password) {
       UserEntity userEntity = new UserEntity();
-      userEntity.setName(singingUser.getName());
-      userEntity.setSurname(singingUser.getSurname());
+      userEntity.setName(HtmlUtils.htmlEscape(singingUser.getName()));
+      userEntity.setSurname(HtmlUtils.htmlEscape(singingUser.getSurname()));
       userEntity.setEmail(singingUser.getEmail());
       userEntity.setPassword(password);
       userEntity.setRole(Role.ROLE_USER.name());
@@ -81,8 +82,8 @@ public class UserService {
 
     public static UserEntity mapToUser(Employee employee, String password) {
       UserEntity userEntity = new UserEntity();
-      userEntity.setName(employee.getName());
-      userEntity.setSurname(employee.getSurname());
+      userEntity.setName(HtmlUtils.htmlEscape(employee.getName()));
+      userEntity.setSurname(HtmlUtils.htmlEscape(employee.getSurname()));
       userEntity.setEmail(employee.getEmail());
       userEntity.setPassword(password);
       userEntity.setRole(employee.getRole());
