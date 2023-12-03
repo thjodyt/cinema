@@ -1,5 +1,6 @@
 package com.thjodyt.cinema.data;
 
+import com.thjodyt.cinema.data.validation.UniqueEmail;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -20,6 +21,7 @@ public class Employee {
 
   @NotBlank(message = "E-mail jest wymagany.")
   @Email(message = "Niepoprawny adres e-mail.")
+  @UniqueEmail
   private String email;
 
   private String role;
