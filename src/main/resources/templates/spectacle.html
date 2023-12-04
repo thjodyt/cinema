@@ -3,43 +3,195 @@
 <head>
   <meta charset="UTF-8">
   <title>Spektakl</title>
+  <style>
+    * {
+      font-family: 'Courier New', Courier, monospace;
+      background-color: #0f0f0f;
+      color: lightseagreen;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    #header button {
+      background: none;
+      border: none;
+      color: lightseagreen;
+      text-align: center;
+      padding: 3vh 4vw;
+    }
+
+    #header button:hover {
+      cursor: pointer;
+      background: lightseagreen;
+      color: #0f0f0f;
+    }
+
+    #container form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    #container {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      align-items: center;
+    }
+
+    input[type="checkbox"], #movie td {
+      padding: 1vh;
+    }
+
+    #container label {
+      padding: 1vh;
+      display: block;
+    }
+
+    #container button {
+      background: none;
+      border-color: lightseagreen;
+      color: lightseagreen;
+      text-align: center;
+      padding: 2vh 1vw;
+      margin-top: 5vh;
+      margin-left: 35vw;
+      margin-right: 35vw;
+    }
+
+    #container button:hover {
+      cursor: pointer;
+      background: lightseagreen;
+      color: #0f0f0f;
+    }
+
+    #header {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      margin-bottom: 5vh;
+    }
+
+    #sign-in-up {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+    }
+
+    #movie {
+      width: 33%;
+      padding: 3vh 3vw;
+    }
+
+    #movie tr > td:first-child {
+      text-align: right;
+    }
+
+    #movie tr > td:last-child {
+      text-align: left;
+    }
+
+    #movie td {
+      padding: 1vh;
+    }
+
+    #movie p {
+      padding: 3vh;
+    }
+
+    #footer {
+      padding: 5vh 3vw;
+    }
+  </style>
 </head>
 <body>
 
-  <form th:if="${!(user == null)}" method="POST" th:action="@{/cinema/logout}">
-    <button type="submit" name="submit" value="value">Wyloguj</button>
-  </form>
+  <div id="header">
 
-  <h1>Cześć!</h1>
-  <a th:if="${user == null}" th:href="@{/cinema/sign-up}">Zarejestruj się</a>
-  <a th:if="${user == null}" th:href="@{/cinema/sign-in}">Zaloguj się</a>
-  <h2>Najlepsze filmy tylko u nas!</h2>
+    <form method="GET" th:action="@{/cinema}">
+      <button type="submit">Kino</button>
+    </form>
 
-  <div th:if="${spectacle == null}">
-    <td colspan="2"> No spectacle available </td>
+    <form th:if="${(user != null)}" method="GET" th:action="@{/cinema/user}">
+      <button type="submit" th:text="${user.name}"></button>
+    </form>
+
+    <form th:if="${(user != null)}" method="GET" th:action="@{/cinema/user/change}">
+      <button type="submit">Zmiana danych</button>
+    </form>
+
+    <form th:if="${(user != null) and (user.role == 'ROLE_ADMIN')}" method="GET" th:action="@{/cinema/admin}">
+      <button type="submit">Panel administratora</button>
+    </form>
+
+    <div id="sign-in-up" th:if="${user == null}">
+      <form method="GET" th:action="@{/cinema/sign-in}">
+        <button type="submit">Logowanie</button>
+      </form>
+      <form method="GET" th:action="@{/cinema/sign-up}">
+        <button type="submit">Rejestracja</button>
+      </form>
+    </div>
+
+    <form th:if="${(user != null)}" method="POST" th:action="@{/cinema/logout}">
+      <button type="submit">Wyloguj</button>
+    </form>
+
   </div>
-  <div th:if="${spectacle != null}">
-    <h3><span th:text="${spectacle.date}"></span></h3>
-    <h3><span th:text="${spectacle.price}"></span></h3>
-    <h3><span th:text="${spectacle.title}"></span></h3>
-    <h3><span th:text="${spectacle.time}"></span></h3>
-    <h3><span th:text="${spectacle.description}"></span></h3>
-    <h3><span th:text="${spectacle.hallSymbol}"></span></h3>
+
+  <div id="container">
+
+    <div id="movie">
+      <table>
+        <tr>
+          <td>Data: </td>
+          <td th:text="${spectacle.date}"></td>
+        </tr>
+        <tr>
+          <td>Tytuł: </td>
+          <td th:text="${spectacle.title}"></td>
+        </tr>
+        <tr>
+          <td>Cena: </td>
+          <td th:text="${spectacle.price} + ' zł'"></td>
+        </tr>
+        <tr>
+          <td>Czas: </td>
+          <td th:text="${spectacle.time} + ' min'"></td>
+        </tr>
+        <tr>
+          <td>Sala: </td>
+          <td th:text="${spectacle.hallSymbol}"></td>
+        </tr>
+      </table>
+      <p th:text="${spectacle.description}"></p>
+    </div>
+
+    <form th:action="@{/cinema/reservation}" method="post" th:object="${reservationDetails}">
+      <input type="number" th:field="*{id}" name="id" th:value="${reservationDetails.id}" hidden>
+      <table>
+        <tr th:each="row : ${spectacle.seats}">
+          <td th:each="seat : ${row}">
+            <input th:if="${seat != null}" th:id="'s' + ${seat}" type="checkbox" name="seats" th:value="${seat}" th:field="*{seats}"/>
+            <label th:for="'s' + ${seat}" th:text="${seat}"></label>
+          </td>
+        </tr>
+      </table>
+      <button type="submit">Rezerwacja</button>
+    </form>
+
   </div>
 
-  <form th:action="@{/cinema/reservation}" method="post" th:object="${reservationDetails}">
-    <input type="number" th:field="*{id}" name="id" th:value="${reservationDetails.id}" hidden>
-    <table>
-      <tr th:each="row : ${spectacle.seats}">
-        <td th:each="seat : ${row}">
-          <label>
-            <input th:if="${seat != null}" type="checkbox" name="seats" th:text="${seat}" th:value="${seat}" th:field="*{seats}"/>
-          </label>
-        </td>
-      </tr>
-    </table>
-    <input type="submit" value="Rezerwacja" />
-  </form>
+  <div id="footer">
+    <h3>Projekt zespołowy</h3>
+  </div>
 
 </body>
 </html>
