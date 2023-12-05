@@ -3,37 +3,153 @@
 <head>
   <meta charset="UTF-8">
   <title>Change user properties</title>
+  <style>
+    * {
+      font-family: 'Courier New', Courier, monospace;
+      background-color: #0f0f0f;
+      color: lightseagreen;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    #header button {
+      background: none;
+      border: none;
+      color: lightseagreen;
+      text-align: center;
+      padding: 3vh 4vw;
+    }
+
+    #header button:hover {
+      cursor: pointer;
+      background: lightseagreen;
+      color: #0f0f0f;
+    }
+
+    #container form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    #container > h2 {
+      margin-bottom: 2vh;
+    }
+
+    #container > h6 {
+      margin-top: 7vh;
+    }
+
+    #container input {
+      background: none;
+      border: none;
+      color: #f9f9f9;
+      padding: 2vh 1vw;
+      margin-top: 1vh;
+      margin-left: 25vw;
+      margin-right: 25vw;
+      border-bottom: lightseagreen dotted 1px;
+    }
+
+    #container input:placeholder-shown {
+      color: lightseagreen;
+    }
+
+    #container input:focus {
+      outline: none;
+      border-bottom: lightseagreen solid 1px;
+    }
+
+    #container button {
+      background: none;
+      border-color: lightseagreen;
+      color: lightseagreen;
+      text-align: center;
+      padding: 2vh 1vw;
+      margin-top: 5vh;
+      margin-left: 35vw;
+      margin-right: 35vw;
+    }
+
+    #container button:hover {
+      cursor: pointer;
+      background: lightseagreen;
+      color: #0f0f0f;
+    }
+
+    #header {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      margin-bottom: 5vh;
+    }
+
+    #footer {
+      padding: 5vh 3vw;
+    }
+  </style>
 </head>
 <body>
 
-  <a th:href="@{/cinema}">Kino</a>
-  <a th:href="@{/cinema/user/change}">Zmiana danych</a>
-  <a th:if="${(user.role == 'ROLE_ADMIN')}" th:href="@{/cinema/admin}">Panel administratora</a>
+  <div id="header">
 
-  <form method="POST" th:action="@{/cinema/logout}">
-    <button type="submit" name="submit" value="value">Wyloguj</button>
-  </form>
+    <form method="GET" th:action="@{/cinema}">
+      <button type="submit">Kino</button>
+    </form>
 
-  <form th:action="@{/cinema/user/change}" method="post" th:object="${changingUser}">
-    <h2>Zmień dane:</h2>
+    <form method="GET" th:action="@{/cinema/user}">
+      <button type="submit" th:text="${user.name}"></button>
+    </form>
 
-    <input type="text" th:field="*{name}" name="name" th:placeholder="${user.name}" required>
-    <p th:each="err : ${#fields.errors('name')}" th:text="${err}" class="error"></p>
+    <form method="GET" th:action="@{/cinema/user/change}">
+      <button type="submit">Zmiana danych</button>
+    </form>
 
-    <input type="text" th:field="*{surname}" name="surname" th:placeholder="${user.surname}" required>
-    <p th:each="err : ${#fields.errors('surname')}" th:text="${err}" class="error"></p>
+    <form th:if="${(user.role == 'ROLE_ADMIN')}" method="GET" th:action="@{/cinema/admin}">
+      <button type="submit">Panel administratora</button>
+    </form>
 
-    <input type="email" th:field="*{email}" name="email" th:placeholder="${user.email}" required>
-    <p th:each="err : ${#fields.errors('email')}" th:text="${err}" class="error"></p>
+    <form method="POST" th:action="@{/cinema/logout}">
+      <button type="submit">Wyloguj</button>
+    </form>
 
-    <input type="password" th:field="*{oldPassword}" name="oldPassword" placeholder="State hasło" required>
+  </div>
 
-    <input type="password" th:field="*{newPassword}" name="newPassword" placeholder="Nowe hasło">
-    <p th:each="err : ${#fields.errors('newPassword')}" th:text="${err}" class="error"></p>
+  <div id="container">
 
-    <input type="submit" value="Zmień dane" />
+    <form th:action="@{/cinema/user/change}" method="post" th:object="${changingUser}">
+      <h2>Zmień dane:</h2>
 
-  </form>
+      <input type="text" th:field="*{name}" name="name" th:placeholder="${user.name}" required>
+      <h6 th:each="err : ${#fields.errors('name')}" th:text="${err}" class="error"></h6>
+
+      <input type="text" th:field="*{surname}" name="surname" th:placeholder="${user.surname}" required>
+      <h6 th:each="err : ${#fields.errors('surname')}" th:text="${err}" class="error"></h6>
+
+      <input type="email" th:field="*{email}" name="email" th:placeholder="${user.email}" required>
+      <h6 th:each="err : ${#fields.errors('email')}" th:text="${err}" class="error"></h6>
+
+      <input type="password" th:field="*{oldPassword}" name="oldPassword" placeholder="State hasło" required>
+
+      <input type="password" th:field="*{newPassword}" name="newPassword" placeholder="Nowe hasło">
+      <h6 th:each="err : ${#fields.errors('newPassword')}" th:text="${err}" class="error"></h6>
+
+      <button type="submit">Zmień dane</button>
+
+    </form>
+
+  </div>
+
+  <div id="footer">
+    <h3>Projekt zespołowy</h3>
+  </div>
 
 </body>
 </html>
