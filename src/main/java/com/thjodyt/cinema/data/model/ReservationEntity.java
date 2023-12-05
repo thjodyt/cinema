@@ -19,6 +19,6 @@ public class ReservationEntity {
   @Column(name = "seat_num")
   private int seatNum;
   @Column(name = "users_id")
-  private long usersId;
+  private Long usersId;
 
 }

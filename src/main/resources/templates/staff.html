@@ -3,57 +3,232 @@
 <head>
   <meta charset="UTF-8">
   <title>Staff panel</title>
+  <style>
+    * {
+      font-family: 'Courier New', Courier, monospace;
+      background-color: #0f0f0f;
+      color: lightseagreen;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    #header button {
+      background: none;
+      border: none;
+      color: lightseagreen;
+      text-align: center;
+      padding: 3vh 4vw;
+    }
+
+    #header button:hover {
+      cursor: pointer;
+      background: lightseagreen;
+      color: #0f0f0f;
+    }
+
+    #container, #container form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    #container > form {
+      margin-bottom: 4vh;
+      margin-top: 4vh;
+    }
+
+    #container input {
+      background: none;
+      border: none;
+      color: #f9f9f9;
+      padding: 2vh 1vw;
+      margin-top: 1vh;
+      margin-left: 25vw;
+      margin-right: 25vw;
+      border-bottom: lightseagreen dotted 1px;
+    }
+
+    #container input:placeholder-shown {
+      color: lightseagreen;
+    }
+
+    #container input:focus {
+      outline: none;
+      border-bottom: lightseagreen solid 1px;
+    }
+
+    #container > form > button {
+      background: none;
+      border-color: lightseagreen;
+      color: lightseagreen;
+      text-align: center;
+      padding: 2vh 1vw;
+      margin-top: 5vh;
+      margin-left: 35vw;
+      margin-right: 35vw;
+    }
+
+    #container > form > button:hover {
+      cursor: pointer;
+      background: lightseagreen;
+      color: #0f0f0f;
+    }
+
+    input[type="checkbox"] {
+      margin: 2vh;
+    }
+
+    #staff {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      flex-wrap: wrap;
+    }
+
+    .employee {
+      width: 25%;
+      padding: 3vh 3vw;
+      margin: 5vh 3vh;
+    }
+
+    .employee button {
+      background: none;
+      border-color: lightseagreen;
+      color: lightseagreen;
+      text-align: center;
+      padding: 2vh 1vw;
+      margin-top: 5vh;
+    }
+
+    .employee button:hover {
+      cursor: pointer;
+      background: lightseagreen;
+      color: #0f0f0f;
+    }
+
+    tr > td:first-child {
+      text-align: right;
+    }
+
+    tr > td:last-child {
+      text-align: left;
+    }
+
+    td {
+      padding: 1vh;
+    }
+
+    #header {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      margin-bottom: 5vh;
+    }
+
+    #footer {
+      padding: 5vh 3vw;
+    }
+  </style>
 </head>
 <body>
 
-  <a th:href="@{/cinema}">Kino</a>
+  <div id="header">
 
-  <form th:if="${!(user == null)}" method="POST" th:action="@{/cinema/logout}">
-    <button type="submit" name="submit" value="value">Wyloguj</button>
-  </form>
+    <form method="GET" th:action="@{/cinema}">
+      <button type="submit">Kino</button>
+    </form>
 
-  <h1>Cześć! Jesteś administratorem</h1>
-  <h2 th:text="${user.name}"></h2>
-  <h2 th:text="${user.surname}"></h2>
-  <h2 th:text="${user.email}"></h2>
+    <form method="GET" th:action="@{/cinema/user}">
+      <button type="submit" th:text="${user.name}"></button>
+    </form>
 
-  <a th:href="@{/cinema/admin/movies}">Filmy</a>
-  <a th:href="@{/cinema/admin/spectacles}">Spektakle</a>
-  <a th:href="@{/cinema/admin/staff}">Pracownicy</a>
+    <form method="GET" th:action="@{/cinema/user/change}">
+      <button type="submit">Zmiana danych</button>
+    </form>
 
-  <form th:action="@{/cinema/admin/staff}" method="post" th:object="${employee}">
-    <h2>Dodaj pracownika:</h2>
+    <form th:if="${(user.role == 'ROLE_ADMIN')}" method="GET" th:action="@{/cinema/admin/movies}">
+      <button type="submit">Filmy</button>
+    </form>
 
-    <input type="text" th:field="*{name}" name="name" placeholder="imię" required>
-    <p th:each="err : ${#fields.errors('name')}" th:text="${err}" class="error"></p>
+    <form th:if="${(user.role == 'ROLE_ADMIN')}" method="GET" th:action="@{/cinema/admin/spectacles}">
+      <button type="submit">Spektakle</button>
+    </form>
 
-    <input type="text" th:field="*{surname}" name="surname" placeholder="nazwisko" required>
-    <p th:each="err : ${#fields.errors('surname')}" th:text="${err}" class="error"></p>
+    <form th:if="${(user.role == 'ROLE_ADMIN')}" method="GET" th:action="@{/cinema/admin/staff}">
+      <button type="submit">Pracownicy</button>
+    </form>
 
-    <input type="text" th:field="*{email}" name="email" placeholder="e-mail" required>
-    <p th:each="err : ${#fields.errors('email')}" th:text="${err}" class="error"></p>
+    <form method="POST" th:action="@{/cinema/logout}">
+      <button type="submit">Wyloguj</button>
+    </form>
 
-    <fieldset>
-      <legend>Rola:</legend>
+  </div>
+
+  <div id="container">
+
+    <form th:action="@{/cinema/admin/staff}" method="post" th:object="${employee}">
+      <h2>Dodaj pracownika:</h2>
+
+      <input type="text" th:field="*{name}" name="name" placeholder="imię" required>
+      <h6 th:each="err : ${#fields.errors('name')}" th:text="${err}" class="error"></h6>
+
+      <input type="text" th:field="*{surname}" name="surname" placeholder="nazwisko" required>
+      <h6 th:each="err : ${#fields.errors('surname')}" th:text="${err}" class="error"></h6>
+
+      <input type="text" th:field="*{email}" name="email" placeholder="e-mail" required>
+      <h6 th:each="err : ${#fields.errors('email')}" th:text="${err}" class="error"></h6>
+
       <input type="radio" id="admin" name="role" value="ROLE_ADMIN" checked>
       <label for="admin">administrator</label>
       <input type="radio" id="cashier" name="role" value="ROLE_CASHIER">
       <label for="cashier">kasjer</label>
-    </fieldset>
-    <input type="submit" value="Dodaj"/>
 
-  </form>
+      <button type="submit">Dodaj</button>
 
-  <div th:each="employee : ${staff}">
-    <h3><span th:text="${employee.name}"></span></h3>
-    <h3><span th:text="${employee.surname}"></span></h3>
-    <h3><span th:text="${employee.email}"></span></h3>
-    <h3><span th:text="${employee.role}"></span></h3>
-
-    <form th:if="${employee.email} != ${user.email}" method="POST" th:action="@{'/cinema/admin/staff/' + ${employee.email}}">
-      <button type="submit" name="submit" value="value">Usuń</button>
     </form>
 
+    <div id="staff">
+
+      <div class="employee" th:each="employee : ${staff}">
+
+        <table>
+          <tr>
+            <td>Imię: </td>
+            <td th:text="${employee.name}"></td>
+          </tr>
+          <tr>
+            <td>Nazwisko: </td>
+            <td th:text="${employee.surname}"></td>
+          </tr>
+          <tr>
+            <td>E-mail: </td>
+            <td th:text="${employee.email}"></td>
+          </tr>
+          <tr>
+            <td>Rola: </td>
+            <td th:text="${employee.role}"></td>
+          </tr>
+        </table>
+
+        <form th:if="${employee.email} != ${user.email}" method="POST" th:action="@{'/cinema/admin/staff/' + ${employee.email}}">
+          <button type="submit">Usuń</button>
+        </form>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  <div id="footer">
+    <h3>Projekt zespołowy</h3>
   </div>
 
 </body>

@@ -111,8 +111,16 @@
       <button type="submit">Zmiana danych</button>
     </form>
 
-    <form th:if="${(user != null) and (user.role == 'ROLE_ADMIN')}" method="GET" th:action="@{/cinema/admin}">
-      <button type="submit">Panel administratora</button>
+    <form th:if="${(user != null) and (user.role == 'ROLE_ADMIN')}" method="GET" th:action="@{/cinema/admin/movies}">
+      <button type="submit">Filmy</button>
+    </form>
+
+    <form th:if="${(user != null) and (user.role == 'ROLE_ADMIN')}" method="GET" th:action="@{/cinema/admin/spectacles}">
+      <button type="submit">Spektakle</button>
+    </form>
+
+    <form th:if="${(user != null) and (user.role == 'ROLE_ADMIN')}" method="GET" th:action="@{/cinema/admin/staff}">
+      <button type="submit">Pracownicy</button>
     </form>
 
     <div id="sign-in-up" th:if="${user == null}">
