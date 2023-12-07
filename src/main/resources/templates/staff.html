@@ -85,6 +85,12 @@
       margin: 2vh;
     }
 
+    fieldset {
+      padding: 2vh 1vw;
+      margin: 1vh 25vw;
+      border-color: lightseagreen;
+    }
+
     #staff {
       display: flex;
       flex-direction: row;
@@ -185,10 +191,13 @@
       <input type="text" th:field="*{email}" name="email" placeholder="e-mail" required>
       <h6 th:each="err : ${#fields.errors('email')}" th:text="${err}" class="error"></h6>
 
-      <input type="radio" id="admin" name="role" value="ROLE_ADMIN" checked>
-      <label for="admin">administrator</label>
-      <input type="radio" id="cashier" name="role" value="ROLE_CASHIER">
-      <label for="cashier">kasjer</label>
+      <fieldset>
+        <legend>Rola:</legend>
+        <input type="radio" id="admin" name="role" value="ROLE_ADMIN" checked>
+        <label for="admin">administrator</label>
+        <input type="radio" id="cashier" name="role" value="ROLE_CASHIER">
+        <label for="cashier">kasjer</label>
+      </fieldset>
 
       <button type="submit">Dodaj</button>
 
