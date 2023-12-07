@@ -208,7 +208,7 @@
       <div class="spectacle" th:each="spectacle : ${spectacles}">
         <table>
           <tr>
-            <td>Data: </td><td th:text="${spectacle.date}"></td>
+            <td>Data: </td><td th:text="${#temporals.format(spectacle.date, 'dd-MM-yyyy HH:mm')}"></td>
           </tr>
           <tr>
             <td>Tytuł: </td><td th:text="${spectacle.title}"></td>

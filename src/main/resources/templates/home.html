@@ -149,7 +149,7 @@
         <table>
           <tr>
             <td>Data: </td>
-            <td th:text="${spectacle.date}"></td>
+            <td th:text="${#temporals.format(spectacle.date, 'dd-MM-yyyy HH:mm')}"></td>
           </tr>
           <tr>
             <td>Tytuł: </td>
