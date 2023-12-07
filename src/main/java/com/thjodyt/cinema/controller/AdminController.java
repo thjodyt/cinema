@@ -26,12 +26,6 @@ public class AdminController {
   private final HallsService hallsService;
   private final SpectaclesService spectaclesService;
 
-  @GetMapping
-  public String getAdminPanel(Model model, @AuthenticationPrincipal PrincipalUser principalUser) {
-    model.addAttribute("user", principalUser.getUserEntity());
-    return "admin";
-  }
-
   @GetMapping("movies")
   public String getMoviesPanel(Model model, @AuthenticationPrincipal PrincipalUser principalUser) {
     model.addAttribute("user", principalUser.getUserEntity());
