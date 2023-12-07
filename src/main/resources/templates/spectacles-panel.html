@@ -178,7 +178,7 @@
       <input type="datetime-local" th:field="*{date}" name="date" required>
       <h6 th:each="err : ${#fields.errors('date')}" th:text="${err}" class="error"></h6>
 
-      <input type="text" th:field="*{price}" name="price" placeholder="cena" required>
+      <input type="number" step="1" th:field="*{price}" name="price" placeholder="cena" required>
       <h6 th:each="err : ${#fields.errors('price')}" th:text="${err}" class="error"></h6>
 
       <fieldset>

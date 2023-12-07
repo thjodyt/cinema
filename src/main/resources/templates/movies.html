@@ -3,44 +3,211 @@
 <head>
   <meta charset="UTF-8">
   <title>Movies panel</title>
+  <style>
+    * {
+      font-family: 'Courier New', Courier, monospace;
+      background-color: #0f0f0f;
+      color: lightseagreen;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    #header button {
+      background: none;
+      border: none;
+      color: lightseagreen;
+      text-align: center;
+      padding: 3vh 4vw;
+    }
+
+    #header button:hover {
+      cursor: pointer;
+      background: lightseagreen;
+      color: #0f0f0f;
+    }
+
+    #container, #container form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    #container > form {
+      margin-bottom: 4vh;
+      margin-top: 4vh;
+    }
+
+    #container input {
+      background: none;
+      border: none;
+      color: #f9f9f9;
+      padding: 2vh 1vw;
+      margin-top: 1vh;
+      margin-left: 25vw;
+      margin-right: 25vw;
+      border-bottom: lightseagreen dotted 1px;
+    }
+
+    #container input:placeholder-shown {
+      color: lightseagreen;
+    }
+
+    #container input:focus {
+      outline: none;
+      border-bottom: lightseagreen solid 1px;
+    }
+
+    #container > form > button {
+      background: none;
+      border-color: lightseagreen;
+      color: lightseagreen;
+      text-align: center;
+      padding: 2vh 1vw;
+      margin-top: 5vh;
+      margin-left: 35vw;
+      margin-right: 35vw;
+    }
+
+    #container > form > button:hover {
+      cursor: pointer;
+      background: lightseagreen;
+      color: #0f0f0f;
+    }
+
+    input[type="checkbox"] {
+      margin: 2vh;
+    }
+
+    textarea {
+      padding: 2vh 1vw;
+      margin: 1vh 25vw;
+      border-color: lightseagreen;
+    }
+
+    #container > h2 {
+      margin-bottom: 2vh;
+    }
+
+    #container > h6 {
+      margin-top: 7vh;
+    }
+
+    #movies {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-around;
+      flex-wrap: wrap;
+    }
+
+    .movie {
+      width: 25%;
+      padding: 3vh 3vw;
+      margin: 5vh 3vh;
+    }
+
+    tr > td:first-child {
+      text-align: right;
+    }
+
+    tr > td:last-child {
+      text-align: left;
+    }
+
+    td {
+      padding: 1vh;
+    }
+
+    #header {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      margin-bottom: 5vh;
+    }
+
+    #footer {
+      padding: 5vh 3vw;
+    }
+  </style>
 </head>
 <body>
 
-  <a th:href="@{/cinema}">Kino</a>
+  <div id="header">
 
-  <form th:if="${!(user == null)}" method="POST" th:action="@{/cinema/logout}">
-    <button type="submit" name="submit" value="value">Wyloguj</button>
-  </form>
+    <form method="GET" th:action="@{/cinema}">
+      <button type="submit">Kino</button>
+    </form>
 
-  <h1>Cześć! Jesteś administratorem</h1>
-  <h2 th:text="${user.name}"></h2>
-  <h2 th:text="${user.surname}"></h2>
-  <h2 th:text="${user.email}"></h2>
+    <form method="GET" th:action="@{/cinema/user}">
+      <button type="submit" th:text="${user.name}"></button>
+    </form>
 
-  <a th:href="@{/cinema/admin/movies}">Filmy</a>
-  <a th:href="@{/cinema/admin/spectacles}">Spektakle</a>
-  <a th:href="@{/cinema/admin/staff}">Pracownicy</a>
+    <form method="GET" th:action="@{/cinema/user/change}">
+      <button type="submit">Zmiana danych</button>
+    </form>
 
-  <form th:action="@{/cinema/admin/movies}" method="post" th:object="${movie}">
-    <h2>Dodaj film:</h2>
+    <form th:if="${(user.role == 'ROLE_ADMIN')}" method="GET" th:action="@{/cinema/admin/movies}">
+      <button type="submit">Filmy</button>
+    </form>
 
-    <input type="text" th:field="*{title}" name="title" placeholder="tytuł" required>
-    <p th:each="err : ${#fields.errors('title')}" th:text="${err}" class="error"></p>
+    <form th:if="${(user.role == 'ROLE_ADMIN')}" method="GET" th:action="@{/cinema/admin/spectacles}">
+      <button type="submit">Spektakle</button>
+    </form>
 
-    <input type="number" th:field="*{time}" step="1" name="time" placeholder="czas" required>
-    <p th:each="err : ${#fields.errors('time')}" th:text="${err}" class="error"></p>
+    <form th:if="${(user.role == 'ROLE_ADMIN')}" method="GET" th:action="@{/cinema/admin/staff}">
+      <button type="submit">Pracownicy</button>
+    </form>
 
-    <textarea type="text" th:field="*{description}" name="description" placeholder="Opis" required></textarea>
-    <p th:each="err : ${#fields.errors('description')}" th:text="${err}" class="error"></p>
+    <form method="POST" th:action="@{/cinema/logout}">
+      <button type="submit">Wyloguj</button>
+    </form>
 
-    <input type="submit" value="Dodaj"/>
+  </div>
 
-  </form>
+  <div id="container">
 
-  <div th:each="movie : ${movies}">
-    <h3><span th:text="${movie.title}"></span></h3>
-    <h3><span th:text="${movie.time}"></span></h3>
-    <h3><span th:text="${movie.description}"></span></h3>
+    <form th:action="@{/cinema/admin/movies}" method="post" th:object="${movie}">
+      <h2>Dodaj film:</h2>
+
+      <input type="text" th:field="*{title}" name="title" placeholder="tytuł" required>
+      <h6 th:each="err : ${#fields.errors('title')}" th:text="${err}" class="error"></h6>
+
+      <input type="number" th:field="*{time}" step="1" name="time" placeholder="czas" required>
+      <h6 th:each="err : ${#fields.errors('time')}" th:text="${err}" class="error"></h6>
+
+      <textarea type="text" th:field="*{description}" cols="5" name="description" placeholder="Opis" required></textarea>
+      <h6 th:each="err : ${#fields.errors('description')}" th:text="${err}" class="error"></h6>
+
+      <button type="submit">Dodaj</button>
+
+    </form>
+
+    <div id="movies">
+
+      <div class="movie" th:each="movie : ${movies}">
+        <table>
+          <tr>
+            <td>Tytuł: </td><td th:text="${movie.title}"></td>
+          </tr>
+          <tr>
+            <td>Czas: </td><td th:text="${movie.time}"></td>
+          </tr>
+        </table>
+        <p th:text="${movie.description}"></p>
+      </div>
+
+    </div>
+
+  </div>
+
+  <div id="footer">
+    <h3>Projekt zespołowy</h3>
   </div>
 
 </body>

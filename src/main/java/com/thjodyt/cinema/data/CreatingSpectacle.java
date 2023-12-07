@@ -15,7 +15,7 @@ public class CreatingSpectacle {
   private LocalDateTime date;
 
   @Min(value = 0, message = "Cena nusi być dodatnia.")
-  private double price;
+  private Double price;
 
   @NotNull(message = "Film jest wymagany.")
   private Long movieId;
