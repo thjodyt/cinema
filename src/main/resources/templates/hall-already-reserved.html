@@ -3,25 +3,101 @@
 <head>
   <meta charset="UTF-8">
   <title>Hall already reserved</title>
+  <style>
+    * {
+      font-family: 'Courier New', Courier, monospace;
+      background-color: #0f0f0f;
+      color: lightseagreen;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    #header button {
+      background: none;
+      border: none;
+      color: lightseagreen;
+      text-align: center;
+      padding: 3vh 4vw;
+    }
+
+    #header button:hover {
+      cursor: pointer;
+      background: lightseagreen;
+      color: #0f0f0f;
+    }
+
+    #container, #container form {
+      display: flex;
+      flex-direction: column;
+    }
+
+    #container > h2 {
+      margin-bottom: 2vh;
+    }
+
+    #header {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      margin-bottom: 5vh;
+    }
+
+    #footer {
+      padding: 5vh 3vw;
+    }
+  </style>
 </head>
 <body>
 
-  <a th:href="@{/cinema}">Kino</a>
+  <div id="header">
 
-  <form th:if="${!(user == null)}" method="POST" th:action="@{/cinema/logout}">
-    <button type="submit" name="submit" value="value">Wyloguj</button>
-  </form>
+    <form method="GET" th:action="@{/cinema}">
+      <button type="submit">Kino</button>
+    </form>
 
-  <h1>Cześć! Jesteś administratorem</h1>
-  <h2 th:text="${user.name}"></h2>
-  <h2 th:text="${user.surname}"></h2>
-  <h2 th:text="${user.email}"></h2>
+    <form method="GET" th:action="@{/cinema/user}">
+      <button type="submit" th:text="${user.name}"></button>
+    </form>
 
-  <a th:href="@{/cinema/admin/movies}">Filmy</a>
-  <a th:href="@{/cinema/admin/spectacles}">Spektakle</a>
-  <a th:href="@{/cinema/admin/staff}">Pracownicy</a>
+    <form method="GET" th:action="@{/cinema/user/change}">
+      <button type="submit">Zmiana danych</button>
+    </form>
 
-  <h1 th:text="${exception}"></h1>
+    <form th:if="${(user.role == 'ROLE_ADMIN')}" method="GET" th:action="@{/cinema/admin/movies}">
+      <button type="submit">Filmy</button>
+    </form>
+
+    <form th:if="${(user.role == 'ROLE_ADMIN')}" method="GET" th:action="@{/cinema/admin/spectacles}">
+      <button type="submit">Spektakle</button>
+    </form>
+
+    <form th:if="${(user.role == 'ROLE_ADMIN')}" method="GET" th:action="@{/cinema/admin/staff}">
+      <button type="submit">Pracownicy</button>
+    </form>
+
+    <form method="POST" th:action="@{/cinema/logout}">
+      <button type="submit">Wyloguj</button>
+    </form>
+
+  </div>
+
+  <div id="container">
+
+    <h2 th:text="${exception}"></h2>
+
+  </div>
+
+  <div id="footer">
+    <h3>Projekt zespołowy</h3>
+  </div>
 
 </body>
 </html>
