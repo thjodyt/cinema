@@ -48,3 +48,11 @@ To get started with the application, you'll need to have Java 21 or later instal
 
 3. Open browser, and go to: `localhost:8080/cinema`. You can create new user or sign in as predefined admin - email: `admin@admin.com`, password: `pass`
 
+##Dependencies:
+
+- [Thymeleaf](https://www.thymeleaf.org/) - Template engine for the view layer.
+- [Spring Data JPA](https://spring.io/projects/spring-data-jpa) - Simple and efficient database integration using JPA (Java Persistence API).
+- [Spring Security](https://spring.io/projects/spring-security) - Provides security features such as authentication, authorization, and session management.
+- [Spring Validation](https://docs.spring.io/spring-framework/docs/current/reference/html/web.html#mvc-ann-form-validation) - Module for validating input data in the controller layer.
+- [Liquibase](https://www.liquibase.org/) - A tool for controlling and managing the version of the database structure.
+- [Lombok](https://projectlombok.org/) - A library that makes writing code easier by automatically generating methods such as getters, setters, etc.
