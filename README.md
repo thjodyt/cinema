@@ -1,10 +1,10 @@
-#Cinema Seat Reservation System
+# Cinema Seat Reservation System
 
-##Description:
+## Description:
 
 This application was developed as part of the "team project" coursework. The project aimed to create a comprehensive cinema seat reservation system that caters to both cinema customers and employees.
 
-###Features:
+### Features:
 
 For Customers:
 
@@ -28,7 +28,7 @@ For Cinema Employees:
   Cashiers can handle reservations for customers at the cinema's counter using the system.
 
 
-##Installation:
+## Installation:
 
 To get started with the application, you'll need to have Java 21 or later installed on your machine.
 
@@ -48,7 +48,7 @@ To get started with the application, you'll need to have Java 21 or later instal
 
 3. Open browser, and go to: `localhost:8080/cinema`. You can create new user or sign in as predefined admin - email: `admin@admin.com`, password: `pass`
 
-##Dependencies:
+## Dependencies:
 
 - [Thymeleaf](https://www.thymeleaf.org/) - Template engine for the view layer.
 - [Spring Data JPA](https://spring.io/projects/spring-data-jpa) - Simple and efficient database integration using JPA (Java Persistence API).
