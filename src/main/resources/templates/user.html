@@ -181,7 +181,7 @@
 
       <div class="spectacle" th:each="reservation : ${reservations}">
         <table>
-          <tr><td>Data: </td><td th:text="${#temporals.format(spectacle.date, 'dd-MM-yyyy HH:mm')}"></td></tr>
+          <tr><td>Data: </td><td th:text="${#temporals.format(reservation.date, 'dd-MM-yyyy HH:mm')}"></td></tr>
           <tr><td>Tytuł: </td><td th:text="${reservation.title}"></td></tr>
           <tr><td>Cena: </td><td th:text="${reservation.price} + ' zł'"></td></tr>
           <tr><td>Czas: </td><td th:text="${reservation.time} + ' min'"></td></tr>
